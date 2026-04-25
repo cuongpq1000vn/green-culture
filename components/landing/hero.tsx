@@ -60,7 +60,7 @@ export function Hero() {
         >
           <Button
             size="lg"
-            className="bg-[#a3d977] hover:bg-[#8bc55f] text-foreground font-semibold rounded-full px-8 py-6 text-lg"
+            className="bg-[#F5A623] hover:bg-[#D4911E] text-foreground font-semibold rounded-full px-8 py-6 text-lg"
           >
             Learn More
           </Button>

@@ -48,7 +48,7 @@ export function Facilities() {
               technology, featuring practical infrastructure designed to support
               export-ready standards.
             </p>
-            <Button className="bg-[#a3d977] hover:bg-[#8bc55f] text-foreground font-semibold rounded-full px-8">
+            <Button className="bg-[#F5A623] hover:bg-[#D4911E] text-foreground font-semibold rounded-full px-8">
               Learn More
             </Button>
           </motion.div>

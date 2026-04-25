@@ -87,7 +87,7 @@ export function Process() {
                   <span
                     className={`text-sm font-mono px-3 py-1 rounded-lg ${
                       activeStep === index
-                        ? "bg-[#a3d977] text-foreground"
+                        ? "bg-[#F5A623] text-foreground"
                         : "bg-white/20 text-white"
                     }`}
                   >
@@ -96,7 +96,7 @@ export function Process() {
                   <div>
                     <h3
                       className={`text-xl font-semibold mb-2 ${
-                        activeStep === index ? "text-[#a3d977]" : "text-white/80"
+                        activeStep === index ? "text-[#F5A623]" : "text-white/80"
                       }`}
                     >
                       {step.title}

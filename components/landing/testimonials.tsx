@@ -72,7 +72,7 @@ export function Testimonials() {
             {testimonials.map((testimonial) => (
               <SwiperSlide key={testimonial.author}>
                 <div className="bg-white rounded-2xl p-8 shadow-sm border border-border h-full">
-                  <Quote className="h-8 w-8 text-[#a3d977] mb-4" />
+                  <Quote className="h-8 w-8 text-[#F5A623] mb-4" />
                   <p className="text-foreground/70 leading-relaxed mb-6 italic">
                     &quot;{testimonial.quote}&quot;
                   </p>

@@ -69,20 +69,20 @@ export function Blog() {
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute top-4 left-4">
-                  <span className="px-3 py-1 bg-[#a3d977] text-foreground text-xs font-medium rounded-full">
+                  <span className="px-3 py-1 bg-[#F5A623] text-foreground text-xs font-medium rounded-full">
                     {post.category}
                   </span>
                 </div>
               </div>
               <div className="p-6">
                 <p className="text-sm text-foreground/50 mb-2">{post.date}</p>
-                <h3 className="font-semibold text-foreground mb-2 line-clamp-2 group-hover:text-[#7cb342] transition-colors">
+                <h3 className="font-semibold text-foreground mb-2 line-clamp-2 group-hover:text-[#C4880A] transition-colors">
                   {post.title}
                 </h3>
                 <p className="text-sm text-foreground/60 line-clamp-2 mb-4">
                   {post.excerpt}
                 </p>
-                <span className="inline-flex items-center gap-1 text-sm font-medium text-[#7cb342] group-hover:gap-2 transition-all">
+                <span className="inline-flex items-center gap-1 text-sm font-medium text-[#C4880A] group-hover:gap-2 transition-all">
                   Read More <ArrowRight className="h-4 w-4" />
                 </span>
               </div>

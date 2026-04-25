@@ -3,30 +3,39 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
-  { label: "Home", href: "#home" },
-  { label: "About Us", href: "#about" },
+  { label: "Home", href: "/" },
+  { label: "About Us", href: "/about" },
   {
     label: "Products",
-    href: "#products",
+    href: "/products",
     dropdown: [
-      { label: "Rice", href: "#rice" },
-      { label: "Coffee", href: "#coffee" },
-      { label: "Mango", href: "#mango" },
-      { label: "Cassava", href: "#cassava" },
+      { label: "Rice", href: "/products#rice" },
+      { label: "Coffee", href: "/products#coffee" },
+      { label: "Mango", href: "/products#mango" },
+      { label: "Cassava", href: "/products#cassava" },
     ],
   },
-  { label: "Factory", href: "#factory" },
-  { label: "News", href: "#news" },
+  { label: "Factory", href: "/factory" },
+  { label: "News", href: "/news" },
 ];
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const pathname = usePathname();
+
+  const isActive = (href: string) => {
+    if (href === "/") {
+      return pathname === "/";
+    }
+    return pathname.startsWith(href);
+  };
 
   return (
     <motion.header
@@ -59,7 +68,11 @@ export function Header() {
               >
                 <Link
                   href={item.href}
-                  className="flex items-center gap-1 text-foreground/80 hover:text-primary transition-colors font-medium"
+                  className={`flex items-center gap-1 font-medium transition-colors ${
+                    isActive(item.href)
+                      ? "text-[#F5A623]"
+                      : "text-foreground/80 hover:text-[#C4880A]"
+                  }`}
                 >
                   {item.label}
                   {item.dropdown && (
@@ -81,7 +94,7 @@ export function Header() {
                         <Link
                           key={subItem.label}
                           href={subItem.href}
-                          className="block px-4 py-3 text-foreground/80 hover:bg-secondary hover:text-primary transition-colors"
+                          className="block px-4 py-3 text-foreground/80 hover:bg-secondary hover:text-[#C4880A] transition-colors"
                         >
                           {subItem.label}
                         </Link>
@@ -95,7 +108,7 @@ export function Header() {
 
           {/* Contact Button */}
           <Button
-            className="hidden lg:flex bg-[#a3d977] hover:bg-[#8bc55f] text-foreground font-semibold rounded-full px-6"
+            className="hidden lg:flex bg-[#F5A623] hover:bg-[#D4911E] text-foreground font-semibold rounded-full px-6"
           >
             Contact Us
           </Button>
@@ -124,7 +137,11 @@ export function Header() {
                 <div key={item.label}>
                   <Link
                     href={item.href}
-                    className="block py-2 text-foreground/80 hover:text-primary transition-colors font-medium"
+                    className={`block py-2 font-medium transition-colors ${
+                      isActive(item.href)
+                        ? "text-[#F5A623]"
+                        : "text-foreground/80 hover:text-[#C4880A]"
+                    }`}
                     onClick={() => setIsOpen(false)}
                   >
                     {item.label}
@@ -135,7 +152,7 @@ export function Header() {
                         <Link
                           key={subItem.label}
                           href={subItem.href}
-                          className="block py-2 text-sm text-foreground/60 hover:text-primary transition-colors"
+                          className="block py-2 text-sm text-foreground/60 hover:text-[#C4880A] transition-colors"
                           onClick={() => setIsOpen(false)}
                         >
                           {subItem.label}
@@ -145,7 +162,7 @@ export function Header() {
                   )}
                 </div>
               ))}
-              <Button className="w-full mt-4 bg-[#a3d977] hover:bg-[#8bc55f] text-foreground font-semibold rounded-full">
+              <Button className="w-full mt-4 bg-[#F5A623] hover:bg-[#D4911E] text-foreground font-semibold rounded-full">
                 Contact Us
               </Button>
             </nav>

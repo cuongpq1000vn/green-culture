@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { Header } from '@/components/landing/header'
+import { Footer } from '@/components/landing/footer'
 import './globals.css'
 
 const inter = Inter({ 
@@ -9,9 +11,13 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'EGO - Agricultural Supply & Export from Vietnam',
-  description: 'EGO processes and exports rice, coffee, and mango with controlled quality systems and reliable international logistics. Supplying high-quality agricultural products to global markets.',
+  title: {
+    template: '%s | EGO Agricultural Export',
+    default: 'EGO - Agricultural Supply & Export from Vietnam',
+  },
+  description: 'EGO is your trusted partner in Vietnamese agricultural exports. With 25+ years of experience, we supply premium rice, coffee, mango, and cassava to global markets with guaranteed quality and international certifications.',
   generator: 'v0.app',
+  keywords: ['Vietnamese agricultural export', 'rice export Vietnam', 'coffee export', 'mango export', 'cassava export', 'agricultural products', 'organic certified', 'fair trade'],
   icons: {
     icon: [
       {
@@ -39,7 +45,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`${inter.variable} font-sans antialiased bg-background`}>
+        <Header />
         {children}
+        <Footer />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

@@ -7,16 +7,16 @@ import { Linkedin, Mail, Phone } from "lucide-react";
 
 const footerLinks = {
   company: [
-    { label: "About Us", href: "#about" },
-    { label: "Our Products", href: "#products" },
-    { label: "Processing Facilities", href: "#factory" },
-    { label: "News & Updates", href: "#news" },
+    { label: "About Us", href: "/about" },
+    { label: "Our Products", href: "/products" },
+    { label: "Processing Facilities", href: "/factory" },
+    { label: "News & Updates", href: "/news" },
   ],
   products: [
-    { label: "Rice", href: "#rice" },
-    { label: "Coffee", href: "#coffee" },
-    { label: "Mango", href: "#mango" },
-    { label: "Cassava", href: "#cassava" },
+    { label: "Rice", href: "/products#rice" },
+    { label: "Coffee", href: "/products#coffee" },
+    { label: "Mango", href: "/products#mango" },
+    { label: "Cassava", href: "/products#cassava" },
   ],
   contact: [
     { label: "Contact Us", href: "#contact" },
@@ -67,7 +67,7 @@ export function Footer() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-white/60 hover:text-[#a3d977] transition-colors text-sm"
+                    className="text-white/60 hover:text-[#F5A623] transition-colors text-sm"
                   >
                     {link.label}
                   </Link>
@@ -89,7 +89,7 @@ export function Footer() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-white/60 hover:text-[#a3d977] transition-colors text-sm"
+                    className="text-white/60 hover:text-[#F5A623] transition-colors text-sm"
                   >
                     {link.label}
                   </Link>
@@ -111,7 +111,7 @@ export function Footer() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-white/60 hover:text-[#a3d977] transition-colors text-sm"
+                    className="text-white/60 hover:text-[#F5A623] transition-colors text-sm"
                   >
                     {link.label}
                   </Link>
@@ -146,19 +146,19 @@ export function Footer() {
             <div className="flex items-center gap-4">
               <Link
                 href="#"
-                className="p-2 rounded-full border border-white/20 hover:border-[#a3d977] hover:text-[#a3d977] transition-colors"
+                className="p-2 rounded-full border border-white/20 hover:border-[#F5A623] hover:text-[#F5A623] transition-colors"
               >
                 <Linkedin className="h-4 w-4" />
               </Link>
               <Link
                 href="#"
-                className="p-2 rounded-full border border-white/20 hover:border-[#a3d977] hover:text-[#a3d977] transition-colors"
+                className="p-2 rounded-full border border-white/20 hover:border-[#F5A623] hover:text-[#F5A623] transition-colors"
               >
                 <Mail className="h-4 w-4" />
               </Link>
               <Link
                 href="#"
-                className="p-2 rounded-full border border-white/20 hover:border-[#a3d977] hover:text-[#a3d977] transition-colors"
+                className="p-2 rounded-full border border-white/20 hover:border-[#F5A623] hover:text-[#F5A623] transition-colors"
               >
                 <Phone className="h-4 w-4" />
               </Link>
