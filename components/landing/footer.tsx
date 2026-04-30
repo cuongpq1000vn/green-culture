@@ -4,28 +4,40 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { Linkedin, Mail, Phone } from "lucide-react";
+import { getStrapiImageProps } from "@/lib/strapi/utils/media";
+import type { Navigation, SiteSettings } from "@/lib/strapi/types";
 
-const footerLinks = {
+interface FooterProps {
+  navigation?: Navigation;
+  siteSettings?: SiteSettings;
+}
+
+const defaultFooterLinks = {
   company: [
-    { label: "About Us", href: "/about" },
-    { label: "Our Products", href: "/products" },
-    { label: "Processing Facilities", href: "/factory" },
-    { label: "News & Updates", href: "/news" },
+    { id: 1, label: "About Us", href: "/about", openInNewTab: false },
+    { id: 2, label: "Our Products", href: "/products", openInNewTab: false },
+    { id: 3, label: "Processing Facilities", href: "/factory", openInNewTab: false },
+    { id: 4, label: "News & Updates", href: "/news", openInNewTab: false },
   ],
   products: [
-    { label: "Rice", href: "/products#rice" },
-    { label: "Coffee", href: "/products#coffee" },
-    { label: "Mango", href: "/products#mango" },
-    { label: "Cassava", href: "/products#cassava" },
+    { id: 5, label: "Rice", href: "/products#rice", openInNewTab: false },
+    { id: 6, label: "Coffee", href: "/products#coffee", openInNewTab: false },
+    { id: 7, label: "Mango", href: "/products#mango", openInNewTab: false },
+    { id: 8, label: "Cassava", href: "/products#cassava", openInNewTab: false },
   ],
   contact: [
-    { label: "Contact Us", href: "#contact" },
-    { label: "Partnership Inquiry", href: "#partnership" },
-    { label: "Export Information", href: "#export" },
+    { id: 9, label: "Contact Us", href: "#contact", openInNewTab: false },
+    { id: 10, label: "Partnership Inquiry", href: "#partnership", openInNewTab: false },
+    { id: 11, label: "Export Information", href: "#export", openInNewTab: false },
   ],
 };
 
-export function Footer() {
+export function Footer({ navigation, siteSettings }: FooterProps = {}) {
+  const footerLinks = {
+    company: navigation?.footerCompanyLinks || defaultFooterLinks.company,
+    products: navigation?.footerProductLinks || defaultFooterLinks.products,
+    contact: navigation?.footerContactLinks || defaultFooterLinks.contact,
+  };
   return (
     <footer className="bg-[#1a1a1a] text-white">
       {/* Main Footer */}
@@ -40,17 +52,28 @@ export function Footer() {
             className="lg:col-span-1"
           >
             <Link href="/" className="inline-block mb-6">
-              <Image
-                src="/images/logo.jpg"
-                alt="EGO Logo"
-                width={100}
-                height={100}
-                className="object-contain rounded-lg"
-              />
+              {siteSettings?.footerLogo || siteSettings?.logo ? (
+                <Image
+                  {...getStrapiImageProps(siteSettings.footerLogo || siteSettings.logo, {
+                    width: 100,
+                    height: 100,
+                    quality: 85,
+                  })}
+                  alt={(siteSettings.footerLogo || siteSettings.logo).alternativeText || siteSettings.siteName || "Logo"}
+                  className="object-contain rounded-lg"
+                />
+              ) : (
+                <Image
+                  src="/images/logo.jpg"
+                  alt="EGO Logo"
+                  width={100}
+                  height={100}
+                  className="object-contain rounded-lg"
+                />
+              )}
             </Link>
             <p className="text-white/60 text-sm leading-relaxed">
-              Leading agricultural export company specializing in high-quality
-              rice processing and international trade.
+              {siteSettings?.companyDescription || "Leading agricultural export company specializing in high-quality rice processing and international trade."}
             </p>
           </motion.div>
 
@@ -64,10 +87,11 @@ export function Footer() {
             <h3 className="font-semibold text-lg mb-4">Company</h3>
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
-                <li key={link.label}>
+                <li key={link.id || link.label}>
                   <Link
                     href={link.href}
                     className="text-white/60 hover:text-[#F5A623] transition-colors text-sm"
+                    {...(link.openInNewTab && { target: "_blank", rel: "noopener noreferrer" })}
                   >
                     {link.label}
                   </Link>
@@ -86,10 +110,11 @@ export function Footer() {
             <h3 className="font-semibold text-lg mb-4">Products</h3>
             <ul className="space-y-3">
               {footerLinks.products.map((link) => (
-                <li key={link.label}>
+                <li key={link.id || link.label}>
                   <Link
                     href={link.href}
                     className="text-white/60 hover:text-[#F5A623] transition-colors text-sm"
+                    {...(link.openInNewTab && { target: "_blank", rel: "noopener noreferrer" })}
                   >
                     {link.label}
                   </Link>
@@ -108,10 +133,11 @@ export function Footer() {
             <h3 className="font-semibold text-lg mb-4">Get in Touch</h3>
             <ul className="space-y-3">
               {footerLinks.contact.map((link) => (
-                <li key={link.label}>
+                <li key={link.id || link.label}>
                   <Link
                     href={link.href}
                     className="text-white/60 hover:text-[#F5A623] transition-colors text-sm"
+                    {...(link.openInNewTab && { target: "_blank", rel: "noopener noreferrer" })}
                   >
                     {link.label}
                   </Link>

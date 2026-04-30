@@ -4,11 +4,16 @@ import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Quote } from "lucide-react";
+import type { Testimonial } from "@/lib/strapi/types";
 
 import "swiper/css";
 import "swiper/css/pagination";
 
-const testimonials = [
+interface TestimonialsProps {
+  data?: Testimonial[];
+}
+
+const defaultTestimonials = [
   {
     quote:
       "EGO has been our trusted rice supplier for over 5 years. Their consistent quality and reliable delivery have been crucial for our distribution business.",
@@ -32,7 +37,9 @@ const testimonials = [
   },
 ];
 
-export function Testimonials() {
+export function Testimonials({ data }: TestimonialsProps = {}) {
+  // Use fallback if data is undefined, null, or empty array
+  const testimonials = data && data.length > 0 ? data : defaultTestimonials;
   return (
     <section className="py-20 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

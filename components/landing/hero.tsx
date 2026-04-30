@@ -1,21 +1,41 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { getStrapiImageProps } from "@/lib/strapi/utils/media";
+import type { HeroSection } from "@/lib/strapi/types";
 
-export function Hero() {
+interface HeroProps {
+  data?: HeroSection;
+}
+
+export function Hero({ data }: HeroProps = {}) {
   return (
     <section
       id="home"
       className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20"
     >
       {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url('/images/hero-bg.jpg')`,
-        }}
-      >
+      <div className="absolute inset-0">
+        {data?.backgroundImage ? (
+          <Image
+            {...getStrapiImageProps(data.backgroundImage, {
+              fill: true,
+              quality: 85,
+            })}
+            alt={data.backgroundImage.alternativeText || "Hero background"}
+            className="object-cover"
+            priority
+          />
+        ) : (
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: `url('/images/hero-bg.jpg')`,
+            }}
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/50 to-white/80" />
       </div>
 
@@ -28,7 +48,7 @@ export function Hero() {
           className="inline-block mb-6"
         >
           <span className="px-4 py-2 rounded-full border border-foreground/20 text-sm text-foreground/70 bg-white/50 backdrop-blur-sm">
-            Agricultural Supply & Export from Vietnam
+            {data?.badge || "Agricultural Supply & Export from Vietnam"}
           </span>
         </motion.div>
 
@@ -38,9 +58,7 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground leading-tight mb-6 text-balance"
         >
-          Supplying High-Quality Agricultural
-          <br />
-          Products to Global Markets
+          {data?.title || "Supplying High-Quality Agricultural Products to Global Markets"}
         </motion.h1>
 
         <motion.p
@@ -49,8 +67,7 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.6 }}
           className="max-w-2xl mx-auto text-lg text-foreground/70 mb-8"
         >
-          EGO processes and exports rice, expanding into coffee and mango with
-          controlled quality systems and reliable international logistics.
+          {data?.description || "EGO processes and exports rice, expanding into coffee and mango with controlled quality systems and reliable international logistics."}
         </motion.p>
 
         <motion.div
@@ -61,8 +78,15 @@ export function Hero() {
           <Button
             size="lg"
             className="bg-[#F5A623] hover:bg-[#D4911E] text-foreground font-semibold rounded-full px-8 py-6 text-lg"
+            asChild={data?.ctaButton?.href ? true : undefined}
           >
-            Learn More
+            {data?.ctaButton?.href ? (
+              <a href={data.ctaButton.href} target={data.ctaButton.openInNewTab ? "_blank" : "_self"} rel={data.ctaButton.openInNewTab ? "noopener noreferrer" : undefined}>
+                {data.ctaButton.label}
+              </a>
+            ) : (
+              "Learn More"
+            )}
           </Button>
         </motion.div>
       </div>

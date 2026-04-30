@@ -7,8 +7,102 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, CheckCircle } from "lucide-react";
 import Link from "next/link";
+import { getStrapiImageUrl } from "@/lib/strapi/utils/media";
+import type { Product } from "@/lib/strapi/types";
 
-const products = [
+interface ProductsProps {
+  data?: Product[];
+}
+
+// Helper to normalize product data from CMS or fallback
+function normalizeProduct(product: Product | DefaultProduct): NormalizedProduct {
+  const title = 'title' in product && product.title ? product.title : 
+                'name' in product && product.name ? product.name : 'Product';
+  
+  const categoryName = typeof product.category === 'string' 
+    ? product.category 
+    : product.category?.name || 'General';
+  
+  let imageUrl: string;
+  if (typeof product.image === 'string' && product.image) {
+    imageUrl = product.image;
+  } else if (product.image?.url) {
+    const strapiUrl = getStrapiImageUrl(product.image);
+    imageUrl = strapiUrl || '/images/rice-varieties.jpg'; // Fallback if empty
+  } else {
+    // Use a default image that exists based on product type/category
+    const productId = 'id' in product ? product.id : '';
+    if (productId.toLowerCase().includes('rice')) {
+      imageUrl = '/images/rice-varieties.jpg';
+    } else if (productId.toLowerCase().includes('coffee')) {
+      imageUrl = '/images/coffee-beans.jpg';
+    } else if (productId.toLowerCase().includes('mango')) {
+      imageUrl = '/images/tropical-mango.jpg';
+    } else if (productId.toLowerCase().includes('cassava')) {
+      imageUrl = '/images/cassava-roots.jpg';
+    } else {
+      imageUrl = '/images/rice-varieties.jpg'; // Default fallback
+    }
+  }
+  
+  const imageAlt = typeof product.image === 'object' && product.image?.alternativeText
+    ? product.image.alternativeText
+    : title;
+
+  // Normalize certifications - can be string[] or Certification[]
+  const certifications = (product.certifications || []).map((cert: any) => 
+    typeof cert === 'string' ? cert : cert?.name || ''
+  ).filter(Boolean);
+
+  // Normalize varieties - can be string[] or array of objects
+  const varieties = (product.varieties || []).map((v: any) =>
+    typeof v === 'string' ? v : v?.name || ''
+  ).filter(Boolean);
+
+  // Generate a stable id from available data
+  const productId = product.id != null ? String(product.id) : 
+                    ('slug' in product && product.slug) ? product.slug :
+                    title.toLowerCase().replace(/\s+/g, '-');
+
+  return {
+    id: productId,
+    slug: 'slug' in product && product.slug ? product.slug : productId,
+    title,
+    description: product.description || '',
+    image: imageUrl,
+    imageAlt,
+    category: categoryName,
+    varieties,
+    certifications,
+    packaging: product.packaging || '',
+  };
+}
+
+interface NormalizedProduct {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  image: string;
+  imageAlt: string;
+  category: string;
+  varieties: string[];
+  certifications: string[];
+  packaging: string;
+}
+
+interface DefaultProduct {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  varieties: string[];
+  certifications: string[];
+  packaging: string;
+  category: string;
+}
+
+const defaultProducts = [
   {
     id: "rice",
     title: "Premium Rice",
@@ -51,7 +145,11 @@ const products = [
   }
 ];
 
-export function Products() {
+export function Products({ data }: ProductsProps = {}) {
+  // Use fallback if data is undefined, null, or empty array
+  const rawProducts = data && data.length > 0 ? data : defaultProducts;
+  const products = rawProducts.map(p => normalizeProduct(p as Product | DefaultProduct));
+  
   return (
     <section className="py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -67,7 +165,7 @@ export function Products() {
             Our Premium Products
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Discover our range of high-quality agricultural products, sourced from Vietnam's finest farms 
+            Discover our range of high-quality agricultural products, sourced from Vietnam&apos;s finest farms 
             and processed to meet international standards.
           </p>
         </motion.div>
@@ -76,7 +174,7 @@ export function Products() {
         <div className="grid lg:grid-cols-2 gap-8 mb-16">
           {products.map((product, index) => (
             <motion.div
-              key={product.id}
+              key={product.id || `product-${index}`}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -84,12 +182,14 @@ export function Products() {
             >
               <Card className="overflow-hidden group hover:shadow-xl transition-all duration-300 h-full">
                 <div className="aspect-[16/10] relative overflow-hidden">
-                  <Image
-                    src={product.image}
-                    alt={product.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
+                  {product.image && (
+                    <Image
+                      src={product.image}
+                      alt={product.imageAlt}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  )}
                   <div className="absolute top-4 left-4">
                     <Badge variant="secondary" className="bg-[#F5A623] text-foreground">
                       {product.category}
@@ -107,11 +207,12 @@ export function Products() {
                   </p>
 
                   {/* Varieties */}
+                  {product.varieties.length > 0 && (
                   <div className="mb-4">
                     <h4 className="text-sm font-semibold text-foreground mb-2">Varieties</h4>
                     <div className="flex flex-wrap gap-2">
-                      {product.varieties.slice(0, 3).map((variety) => (
-                        <Badge key={variety} variant="outline" className="text-xs">
+                      {product.varieties.slice(0, 3).map((variety, vIndex) => (
+                        <Badge key={variety || `variety-${vIndex}`} variant="outline" className="text-xs">
                           {variety}
                         </Badge>
                       ))}
@@ -122,32 +223,37 @@ export function Products() {
                       )}
                     </div>
                   </div>
+                  )}
 
                   {/* Certifications */}
+                  {product.certifications.length > 0 && (
                   <div className="mb-4">
                     <h4 className="text-sm font-semibold text-foreground mb-2">Certifications</h4>
                     <div className="flex items-start gap-2">
-                      {product.certifications.slice(0, 2).map((cert) => (
-                        <div key={cert} className="flex items-center gap-1">
+                      {product.certifications.slice(0, 2).map((cert, cIndex) => (
+                        <div key={cert || `cert-${cIndex}`} className="flex items-center gap-1">
                           <CheckCircle className="h-3 w-3 text-[#C4880A]" />
                           <span className="text-xs text-muted-foreground">{cert}</span>
                         </div>
                       ))}
                     </div>
                   </div>
+                  )}
 
                   {/* Packaging */}
+                  {product.packaging && (
                   <div className="mb-6">
                     <h4 className="text-sm font-semibold text-foreground mb-1">Packaging</h4>
                     <p className="text-xs text-muted-foreground">{product.packaging}</p>
                   </div>
+                  )}
 
                   {/* CTA Button */}
                   <Button 
                     asChild
                     className="w-full bg-[#F5A623] hover:bg-[#D4911E] text-foreground font-semibold"
                   >
-                    <Link href={`/products#${product.id}`} className="inline-flex items-center justify-center gap-2">
+                    <Link href={`/products#${product.slug || product.id}`} className="inline-flex items-center justify-center gap-2">
                       Learn More
                       <ArrowRight className="h-4 w-4" />
                     </Link>

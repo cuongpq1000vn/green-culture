@@ -1,0 +1,50 @@
+{
+  "kind": "collectionType",
+  "collectionName": "stats",
+  "info": {
+    "singularName": "stat",
+    "pluralName": "stats",
+    "displayName": "Stat",
+    "description": "Statistical data for home and about pages"
+  },
+  "options": {
+    "draftAndPublish": true,
+    "comment": ""
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "value": {
+      "type": "string",
+      "required": true
+    },
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "suffix": {
+      "type": "string",
+      "required": false
+    },
+    "prefix": {
+      "type": "string",
+      "required": false
+    },
+    "icon": {
+      "type": "string",
+      "required": false
+    },
+    "color": {
+      "type": "string",
+      "required": false
+    },
+    "section": {
+      "type": "enumeration",
+      "enum": ["home", "about"],
+      "required": true
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}

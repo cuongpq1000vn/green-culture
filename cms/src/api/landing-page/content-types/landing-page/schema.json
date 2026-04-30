@@ -1,0 +1,67 @@
+{
+  "kind": "singleType",
+  "collectionName": "landing_pages",
+  "info": {
+    "singularName": "landing-page",
+    "pluralName": "landing-pages",
+    "displayName": "Landing Page",
+    "description": "Main landing page content"
+  },
+  "options": {
+    "draftAndPublish": true,
+    "comment": ""
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "hero": {
+      "type": "component",
+      "repeatable": false,
+      "component": "sections.hero-section"
+    },
+    "homeStats": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::stat.stat"
+    },
+    "aboutSection": {
+      "type": "component",
+      "repeatable": false,
+      "component": "sections.about-section"
+    },
+    "featuredProducts": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product.product"
+    },
+    "facilitiesSection": {
+      "type": "json",
+      "required": false
+    },
+    "processSection": {
+      "type": "json",
+      "required": false
+    },
+    "partnersSection": {
+      "type": "json",
+      "required": false
+    },
+    "testimonialsSection": {
+      "type": "json",
+      "required": false
+    },
+    "blogSection": {
+      "type": "json",
+      "required": false
+    },
+    "ctaSection": {
+      "type": "component",
+      "repeatable": false,
+      "component": "sections.cta-section"
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo"
+    }
+  }
+}

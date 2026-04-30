@@ -1,18 +1,37 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { getStrapiImageProps } from "@/lib/strapi/utils/media";
+import type { CTASection } from "@/lib/strapi/types";
 
-export function CTA() {
+interface CTAProps {
+  data?: CTASection;
+}
+
+export function CTA({ data }: CTAProps = {}) {
   return (
     <section className="relative py-32 overflow-hidden">
       {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: `url('/images/cta-bg.jpg')`,
-        }}
-      >
+      <div className="absolute inset-0">
+        {data?.backgroundImage ? (
+          <Image
+            {...getStrapiImageProps(data.backgroundImage, {
+              fill: true,
+              quality: 85,
+            })}
+            alt={data.backgroundImage.alternativeText || "CTA background"}
+            className="object-cover"
+          />
+        ) : (
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url('/images/cta-bg.jpg')`,
+            }}
+          />
+        )}
         <div className="absolute inset-0 bg-foreground/60" />
       </div>
 
@@ -24,17 +43,23 @@ export function CTA() {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 text-balance">
-            Build a Long-Term Agricultural Supply Partnership
+            {data?.title || "Build a Long-Term Agricultural Supply Partnership"}
           </h2>
           <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
-            Partner with EGO for reliable rice export operations and expanding
-            agricultural sourcing capabilities.
+            {data?.description || "Partner with EGO for reliable rice export operations and expanding agricultural sourcing capabilities."}
           </p>
           <Button
             size="lg"
             className="bg-[#F5A623] hover:bg-[#D4911E] text-foreground font-semibold rounded-full px-10 py-6 text-lg"
+            asChild={data?.primaryButton?.href ? true : undefined}
           >
-            Contact Us
+            {data?.primaryButton?.href ? (
+              <a href={data.primaryButton.href} target={data.primaryButton.openInNewTab ? "_blank" : "_self"} rel={data.primaryButton.openInNewTab ? "noopener noreferrer" : undefined}>
+                {data.primaryButton.label}
+              </a>
+            ) : (
+              "Contact Us"
+            )}
           </Button>
         </motion.div>
       </div>

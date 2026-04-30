@@ -1,0 +1,54 @@
+{
+  "kind": "collectionType",
+  "collectionName": "certifications",
+  "info": {
+    "singularName": "certification",
+    "pluralName": "certifications",
+    "displayName": "Certification",
+    "description": "Quality certifications and standards"
+  },
+  "options": {
+    "draftAndPublish": true,
+    "comment": ""
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "maxLength": 100
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": false
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "website": {
+      "type": "string",
+      "required": false
+    },
+    "certificateNumber": {
+      "type": "string",
+      "required": false
+    },
+    "validFrom": {
+      "type": "date",
+      "required": false
+    },
+    "validUntil": {
+      "type": "date",
+      "required": false
+    }
+  }
+}

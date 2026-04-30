@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { PageHero } from "@/components/landing/page-hero";
-import { Products } from "@/components/landing/products";
-import { CTA } from "@/components/landing/cta";
+import { ProductsCMS } from "@/components/cms/products-cms";
+import { CTACMS } from "@/components/cms/cta-cms";
 
 export const metadata: Metadata = {
   title: "Our Products",
@@ -15,8 +15,8 @@ export default function ProductsPage() {
         title="Our Products"
         breadcrumbs={[{ label: "Our Products", href: "/products" }]}
       />
-      <Products />
-      <CTA />
+      <ProductsCMS />
+      <CTACMS />
     </main>
   );
 }

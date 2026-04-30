@@ -1,10 +1,10 @@
 import { Metadata } from "next";
 import { PageHero } from "@/components/landing/page-hero";
-import { About } from "@/components/landing/about";
+import { AboutCMS } from "@/components/cms/about-cms";
 import { FeaturedImage } from "@/components/landing/featured-image";
-import { GlobalPartners } from "@/components/landing/global-partners";
-import { Testimonials } from "@/components/landing/testimonials";
-import { CTA } from "@/components/landing/cta";
+import { GlobalPartnersCMS } from "@/components/cms/global-partners-cms";
+import { TestimonialsCMS } from "@/components/cms/testimonials-cms";
+import { CTACMS } from "@/components/cms/cta-cms";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -18,11 +18,11 @@ export default function AboutPage() {
         title="About Us"
         breadcrumbs={[{ label: "About Us", href: "/about" }]}
       />
-      <About />
+      <AboutCMS />
       <FeaturedImage />
-      <GlobalPartners />
-      <Testimonials />
-      <CTA />
+      <GlobalPartnersCMS />
+      <TestimonialsCMS />
+      <CTACMS />
     </main>
   );
 }

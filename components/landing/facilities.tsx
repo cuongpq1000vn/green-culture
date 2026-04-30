@@ -5,27 +5,44 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { getStrapiImageProps } from "@/lib/strapi/utils/media";
+import type { Facility } from "@/lib/strapi/types";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-const facilities = [
+interface FacilitiesProps {
+  data?: Facility[];
+}
+
+const defaultFacilities = [
   {
-    image: "/images/facility-1.jpg",
+    id: 1,
     title: "Processing Plant",
-  },
-  {
-    image: "/images/facility-2.jpg",
-    title: "Storage Facility",
-  },
-  {
+    description: "State-of-the-art rice milling and processing facility",
     image: "/images/facility-1.jpg",
+    order: 1,
+  },
+  {
+    id: 2,
+    title: "Storage Facility",
+    description: "Climate-controlled storage warehouses",
+    image: "/images/facility-2.jpg",
+    order: 2,
+  },
+  {
+    id: 3,
     title: "Quality Control Lab",
+    description: "Advanced testing and quality assurance laboratory",
+    image: "/images/facility-1.jpg",
+    order: 3,
   },
 ];
 
-export function Facilities() {
+export function Facilities({ data }: FacilitiesProps = {}) {
+  // Use fallback if data is undefined, null, or empty array
+  const displayFacilities = data && data.length > 0 ? data : defaultFacilities;
   return (
     <section id="factory" className="py-20 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -69,19 +86,35 @@ export function Facilities() {
               pagination={{ clickable: true }}
               className="rounded-2xl overflow-hidden"
             >
-              {facilities.map((facility) => (
-                <SwiperSlide key={facility.title}>
+              {displayFacilities.map((facility) => (
+                <SwiperSlide key={facility.id || facility.title}>
                   <div className="relative h-80 lg:h-[400px]">
-                    <Image
-                      src={facility.image}
-                      alt={facility.title}
-                      fill
-                      className="object-cover"
-                    />
+                    {facility.image && typeof facility.image === 'object' && 'url' in facility.image ? (
+                      <Image
+                        {...getStrapiImageProps(facility.image, {
+                          quality: 85,
+                          fill: true,
+                        })}
+                        alt={facility.image.alternativeText || facility.title}
+                        className="object-cover"
+                      />
+                    ) : (
+                      <Image
+                        src={typeof facility.image === 'string' ? facility.image : '/images/facility-1.jpg'}
+                        alt={facility.title}
+                        fill
+                        className="object-cover"
+                      />
+                    )}
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6">
                       <h3 className="text-white font-semibold text-lg">
                         {facility.title}
                       </h3>
+                      {facility.description && (
+                        <p className="text-white/80 text-sm mt-1">
+                          {facility.description}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </SwiperSlide>

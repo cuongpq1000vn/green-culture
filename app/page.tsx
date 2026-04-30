@@ -1,8 +1,8 @@
 import { Metadata } from "next";
-import { Hero } from "@/components/landing/hero";
-import { StatsBar } from "@/components/landing/stats-bar";
-import { Products } from "@/components/landing/products";
-import { CTA } from "@/components/landing/cta";
+import { HeroCMS } from "@/components/cms/hero-cms";
+import { StatsBarCMS } from "@/components/cms/stats-bar-cms";
+import { ProductsCMS } from "@/components/cms/products-cms";
+import { CTACMS } from "@/components/cms/cta-cms";
 
 export const metadata: Metadata = {
   title: "EGO - Agricultural Supply & Export from Vietnam",
@@ -12,9 +12,9 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main className="min-h-screen bg-background">
-      <Hero />
-      <StatsBar />
-      {/* Products Preview - showing first 4 products */}
+      <HeroCMS />
+      <StatsBarCMS />
+      {/* Products Preview - showing featured products only */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -34,9 +34,10 @@ export default function Home() {
               </svg>
             </a>
           </div>
+          <ProductsCMS featuredOnly />
         </div>
       </section>
-      <CTA />
+      <CTACMS />
     </main>
   );
 }
