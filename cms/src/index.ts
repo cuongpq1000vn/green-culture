@@ -7,7 +7,17 @@ export default {
    *
    * This gives you an opportunity to extend code.
    */
-  register(/* { strapi }: { strapi: Core.Strapi } */) {},
+  register({ strapi }) {
+    // Add health check middleware
+    strapi.server.use(async (ctx, next) => {
+      if (ctx.path === '/api/health' || ctx.path === '/_health') {
+        ctx.status = 200;
+        ctx.body = { status: 'ok', timestamp: new Date().toISOString() };
+        return;
+      }
+      await next();
+    });
+  },
 
   /**
    * An asynchronous bootstrap function that runs before
