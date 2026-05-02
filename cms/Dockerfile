@@ -1,29 +1,26 @@
 # Multi-stage Dockerfile for Strapi CMS
 # ==========================================
 
-# Stage 1: Dependencies
-FROM node:20-alpine AS deps
-WORKDIR /app
-
-# Install build dependencies for native modules
-RUN apk add --no-cache python3 make g++ 
-
-COPY package.json package-lock.json ./
-RUN npm ci --only=production
-
-# Stage 2: Builder
+# Stage 1: Builder
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-RUN apk add --no-cache python3 make g++
+# Install build dependencies for native modules
+RUN apk add --no-cache python3 make g++ vips-dev
 
+# Copy package files
 COPY package.json package-lock.json ./
+
+# Install ALL dependencies (including devDependencies for build)
 RUN npm ci
 
+# Copy source files
 COPY . .
+
+# Build Strapi
 RUN npm run build
 
-# Stage 3: Runner
+# Stage 2: Runner
 FROM node:20-alpine AS runner
 WORKDIR /app
 
@@ -31,26 +28,29 @@ ENV NODE_ENV=production
 ENV HOST=0.0.0.0
 ENV PORT=1337
 
-# Install runtime dependencies only
+# Install runtime dependencies
 RUN apk add --no-cache vips-dev
 
 # Create non-root user
 RUN addgroup --system --gid 1001 strapi && \
     adduser --system --uid 1001 strapi
 
-# Copy built app
-COPY --from=deps /app/node_modules ./node_modules
+# Copy package files and install production deps only
+COPY package.json package-lock.json ./
+RUN npm ci --only=production && npm cache clean --force
+
+# Copy built app from builder
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/favicon.png ./favicon.png
 
 # Copy config and source (needed for runtime)
-COPY config ./config
-COPY src ./src
+COPY --from=builder /app/config ./config
+COPY --from=builder /app/src ./src
+COPY --from=builder /app/tsconfig.json ./tsconfig.json
 
-# Set ownership
-RUN chown -R strapi:strapi /app
+# Create necessary directories
+RUN mkdir -p .tmp && chown -R strapi:strapi /app
 
 USER strapi
 
