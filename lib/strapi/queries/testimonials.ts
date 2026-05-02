@@ -21,7 +21,7 @@ export async function getTestimonials(): Promise<Testimonial[]> {
         {
           populate: POPULATE_QUERIES.getTestimonials.populate,
           sort: POPULATE_QUERIES.getTestimonials.sort,
-          revalidate: 3600, // 1 hour - testimonials don't change often
+          revalidate: 0, // No caching - always fetch fresh data
           next: {
             tags: [CACHE_TAGS.testimonials],
           },

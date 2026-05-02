@@ -8,12 +8,19 @@
 import { fetchStrapiCollection, fetchWithFallback } from '../client';
 import { POPULATE_QUERIES, API_ENDPOINTS, CACHE_TAGS } from '../api-contract';
 import { fallbackBlogPosts } from '../fallbacks';
+import { logCacheStatus } from '../dev-utils';
 import type { BlogPostsResponse, BlogPost } from '../types';
 
 /**
  * Get all blog posts
  */
 export async function getBlogPosts(): Promise<BlogPost[]> {
+  // Log cache status in development
+  if (process.env.NODE_ENV === 'development') {
+    logCacheStatus();
+    console.log('🔍 Fetching all blog posts...');
+  }
+
   return fetchWithFallback(
     async () => {
       const response = await fetchStrapiCollection<BlogPostsResponse>(
@@ -21,7 +28,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
         {
           populate: POPULATE_QUERIES.getBlogPosts.populate,
           sort: POPULATE_QUERIES.getBlogPosts.sort,
-          revalidate: 1800, // 30 minutes
+          revalidate: 0, // No caching - always fetch fresh data
           next: {
             tags: [CACHE_TAGS.blogPosts],
           },
@@ -45,7 +52,7 @@ export async function getRecentBlogPosts(limit: number = 3): Promise<BlogPost[]>
         API_ENDPOINTS.RECENT_BLOG_POSTS(limit),
         {
           populate: POPULATE_QUERIES.getBlogPosts.populate,
-          revalidate: 1800, // 30 minutes
+          revalidate: 0, // No caching - always fetch fresh data
           next: {
             tags: [CACHE_TAGS.blogPosts],
           },
@@ -69,7 +76,7 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
         API_ENDPOINTS.BLOG_POST_BY_SLUG(slug),
         {
           populate: POPULATE_QUERIES.getBlogPosts.populate,
-          revalidate: 3600, // 1 hour
+          revalidate: 0, // No caching - always fetch fresh data
           next: {
             tags: [CACHE_TAGS.blogPosts],
           },
@@ -94,7 +101,7 @@ export async function getFeaturedBlogPosts(): Promise<BlogPost[]> {
         {
           populate: POPULATE_QUERIES.getBlogPosts.populate,
           sort: POPULATE_QUERIES.getBlogPosts.sort,
-          revalidate: 1800, // 30 minutes
+          revalidate: 0, // No caching - always fetch fresh data
           next: {
             tags: [CACHE_TAGS.blogPosts],
           },

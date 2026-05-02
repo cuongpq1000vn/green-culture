@@ -20,7 +20,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
         API_ENDPOINTS.SITE_SETTINGS,
         {
           populate: POPULATE_QUERIES.getSiteSettings.populate,
-          revalidate: 3600, // 1 hour - settings don't change often
+          revalidate: 0, // No caching - always fetch fresh data
           next: {
             tags: [CACHE_TAGS.siteSettings],
           },

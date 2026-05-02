@@ -21,7 +21,7 @@ export async function getProducts(): Promise<Product[]> {
         {
           populate: POPULATE_QUERIES.getProducts.populate,
           sort: POPULATE_QUERIES.getProducts.sort,
-          revalidate: 1800, // 30 minutes
+          revalidate: 0, // No caching - always fetch fresh data
           next: {
             tags: [CACHE_TAGS.products],
           },
@@ -46,7 +46,7 @@ export async function getFeaturedProducts(): Promise<Product[]> {
         {
           populate: POPULATE_QUERIES.getProducts.populate,
           sort: POPULATE_QUERIES.getProducts.sort,
-          revalidate: 1800, // 30 minutes
+          revalidate: 0, // No caching - always fetch fresh data
           next: {
             tags: [CACHE_TAGS.products],
           },
@@ -70,7 +70,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
         API_ENDPOINTS.PRODUCT_BY_SLUG(slug),
         {
           populate: POPULATE_QUERIES.getProducts.populate,
-          revalidate: 3600, // 1 hour
+          revalidate: 0, // No caching - always fetch fresh data
           next: {
             tags: [CACHE_TAGS.products],
           },
@@ -95,7 +95,7 @@ export async function getProductsByCategory(categorySlug: string): Promise<Produ
         {
           populate: POPULATE_QUERIES.getProducts.populate,
           sort: POPULATE_QUERIES.getProducts.sort,
-          revalidate: 1800, // 30 minutes
+          revalidate: 0, // No caching - always fetch fresh data
           next: {
             tags: [CACHE_TAGS.products],
           },
@@ -119,7 +119,7 @@ export async function getProductCategories(): Promise<ProductCategory[]> {
         API_ENDPOINTS.PRODUCT_CATEGORIES,
         {
           populate: POPULATE_QUERIES.getProductCategories.populate,
-          revalidate: 3600, // 1 hour - categories don't change often
+          revalidate: 0, // No caching - always fetch fresh data
           next: {
             tags: [CACHE_TAGS.productCategories],
           },

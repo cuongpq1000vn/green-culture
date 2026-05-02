@@ -21,7 +21,7 @@ export async function getFacilities(): Promise<Facility[]> {
         {
           populate: POPULATE_QUERIES.getFacilities.populate,
           sort: POPULATE_QUERIES.getFacilities.sort,
-          revalidate: 3600, // 1 hour - facilities don't change often
+          revalidate: 0, // No caching - always fetch fresh data
           next: {
             tags: [CACHE_TAGS.facilities],
           },
@@ -46,7 +46,7 @@ export async function getProcessSteps(): Promise<ProcessStep[]> {
         {
           populate: POPULATE_QUERIES.getProcessSteps.populate,
           sort: POPULATE_QUERIES.getProcessSteps.sort,
-          revalidate: 3600, // 1 hour - process steps don't change often
+          revalidate: 0, // No caching - always fetch fresh data
           next: {
             tags: [CACHE_TAGS.processSteps],
           },

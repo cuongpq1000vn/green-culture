@@ -21,7 +21,7 @@ export async function getGlobalPartners(): Promise<GlobalPartner[]> {
         {
           populate: POPULATE_QUERIES.getGlobalPartners.populate,
           sort: POPULATE_QUERIES.getGlobalPartners.sort,
-          revalidate: 3600, // 1 hour - partners don't change often
+          revalidate: 0, // No caching - always fetch fresh data
           next: {
             tags: [CACHE_TAGS.globalPartners],
           },

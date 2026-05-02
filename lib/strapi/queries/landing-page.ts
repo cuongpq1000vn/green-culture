@@ -20,7 +20,7 @@ export async function getLandingPage(): Promise<LandingPage> {
         API_ENDPOINTS.LANDING_PAGE,
         {
           populate: POPULATE_QUERIES.getLandingPage.populate,
-          revalidate: 300, // 5 minutes - homepage changes frequently
+          revalidate: 0, // No caching - always fetch fresh data
           next: {
             tags: [CACHE_TAGS.landingPage],
           },
@@ -44,7 +44,7 @@ export async function getHomeStats(): Promise<Stat[]> {
         API_ENDPOINTS.STATS_BY_SECTION('home'),
         {
           populate: POPULATE_QUERIES.getHomeStats.populate,
-          revalidate: 3600, // 1 hour - stats don't change often
+          revalidate: 0, // No caching - always fetch fresh data
           next: {
             tags: [CACHE_TAGS.stats],
           },
@@ -68,7 +68,7 @@ export async function getAboutStats(): Promise<Stat[]> {
         API_ENDPOINTS.STATS_BY_SECTION('about'),
         {
           populate: POPULATE_QUERIES.getAboutStats.populate,
-          revalidate: 3600, // 1 hour
+          revalidate: 0, // No caching - always fetch fresh data
           next: {
             tags: [CACHE_TAGS.stats],
           },

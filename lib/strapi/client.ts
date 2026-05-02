@@ -60,15 +60,25 @@ export async function fetchStrapi<T>(
   } = {}
 ): Promise<T> {
   const {
-    cache = 'force-cache',
-    revalidate = API_CONFIG.DEFAULT_REVALIDATE,
+    cache = 'no-store', // Default to no-store for development
+    revalidate = 0, // Default to no caching
     next,
     query = {},
   } = options;
 
+  // Force no-cache during development
+  const isDev = process.env.NODE_ENV === 'development';
+  const finalCache = isDev ? 'no-store' : cache;
+  const finalRevalidate = isDev ? 0 : (revalidate === 0 ? undefined : revalidate);
+
   try {
     // Build URL with query parameters
     const url = new URL(`${API_CONFIG.BASE_URL}/api${endpoint}`);
+    
+    // Add cache-busting timestamp for development
+    if (isDev) {
+      url.searchParams.set('_t', Date.now().toString());
+    }
     
     // Add query parameters - use Strapi v5 format
     Object.entries(query).forEach(([key, value]) => {
@@ -96,12 +106,22 @@ export async function fetchStrapi<T>(
       }
     });
 
-    // Configure fetch options
+    // Configure fetch options with aggressive cache busting for dev
     const fetchOptions: RequestInit = {
       method: 'GET',
-      headers: getRequestHeaders(),
-      cache,
-      ...(revalidate && { next: { revalidate, ...next } }),
+      headers: {
+        ...getRequestHeaders(),
+        // Add cache-busting headers for development
+        ...(isDev && {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        })
+      },
+      cache: finalCache,
+      ...(finalRevalidate !== undefined && finalRevalidate > 0 && { 
+        next: { revalidate: finalRevalidate, ...next } 
+      }),
     };
 
     console.log(`Fetching from Strapi: ${url.toString()}`);

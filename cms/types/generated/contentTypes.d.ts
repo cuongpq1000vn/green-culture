@@ -850,6 +850,7 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
       'manyToOne',
       'api::product-category.product-category'
     >;
+    certifications: Schema.Attribute.JSON;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -873,6 +874,7 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
       }>;
     order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     origin: Schema.Attribute.String;
+    packaging: Schema.Attribute.String;
     price: Schema.Attribute.Decimal;
     publishedAt: Schema.Attribute.DateTime;
     seo: Schema.Attribute.Component<'shared.seo', false>;
@@ -886,6 +888,7 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    varieties: Schema.Attribute.JSON;
   };
 }
 
