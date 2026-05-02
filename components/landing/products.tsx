@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { ArrowRight, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { getStrapiImageUrl } from "@/lib/strapi/utils/media";
+import { fallbackProducts } from "@/lib/strapi/fallbacks";
 import type { Product } from "@/lib/strapi/types";
 
 interface ProductsProps {
@@ -15,58 +16,54 @@ interface ProductsProps {
 }
 
 // Helper to normalize product data from CMS or fallback
-function normalizeProduct(product: Product | DefaultProduct): NormalizedProduct {
-  const title = 'title' in product && product.title ? product.title : 
-                'name' in product && product.name ? product.name : 'Product';
+function normalizeProduct(product: Product): NormalizedProduct {
+  // Get the display name - prefer title, fallback to name
+  const title = product.title || product.name || 'Product';
   
-  const categoryName = typeof product.category === 'string' 
-    ? product.category 
-    : product.category?.name || 'General';
+  // Handle category - it should always be a ProductCategory object
+  const categoryName = product.category?.name || 'General';
   
+  // Handle image URL
   let imageUrl: string;
-  if (typeof product.image === 'string' && product.image) {
-    imageUrl = product.image;
-  } else if (product.image?.url) {
+  if (product.image?.url) {
     const strapiUrl = getStrapiImageUrl(product.image);
-    imageUrl = strapiUrl || '/images/rice-varieties.jpg'; // Fallback if empty
+    imageUrl = strapiUrl || '/images/rice-varieties.jpg';
   } else {
-    // Use a default image that exists based on product type/category
-    const productId = 'id' in product ? product.id : '';
-    if (productId.toLowerCase().includes('rice')) {
+    // Use a default image based on product slug/name/title
+    const productIdentifier = product.slug || product.name || product.title || '';
+    if (productIdentifier.toLowerCase().includes('rice')) {
       imageUrl = '/images/rice-varieties.jpg';
-    } else if (productId.toLowerCase().includes('coffee')) {
+    } else if (productIdentifier.toLowerCase().includes('coffee')) {
       imageUrl = '/images/coffee-beans.jpg';
-    } else if (productId.toLowerCase().includes('mango')) {
+    } else if (productIdentifier.toLowerCase().includes('mango')) {
       imageUrl = '/images/tropical-mango.jpg';
-    } else if (productId.toLowerCase().includes('cassava')) {
+    } else if (productIdentifier.toLowerCase().includes('cassava')) {
       imageUrl = '/images/cassava-roots.jpg';
     } else {
-      imageUrl = '/images/rice-varieties.jpg'; // Default fallback
+      imageUrl = '/images/rice-varieties.jpg';
     }
   }
   
-  const imageAlt = typeof product.image === 'object' && product.image?.alternativeText
-    ? product.image.alternativeText
-    : title;
+  const imageAlt = product.image?.alternativeText || title;
 
-  // Normalize certifications - can be string[] or Certification[]
-  const certifications = (product.certifications || []).map((cert: any) => 
+  // Handle varieties - normalize to string array
+  const varieties = (product.varieties || []).map((variety: string | { name: string }) =>
+    typeof variety === 'string' ? variety : variety?.name || ''
+  ).filter(Boolean);
+
+  // Handle certifications - normalize to string array  
+  const certifications = (product.certifications || []).map((cert: string | { name: string }) => 
     typeof cert === 'string' ? cert : cert?.name || ''
   ).filter(Boolean);
 
-  // Normalize varieties - can be string[] or array of objects
-  const varieties = (product.varieties || []).map((v: any) =>
-    typeof v === 'string' ? v : v?.name || ''
-  ).filter(Boolean);
-
-  // Generate a stable id from available data
+  // Generate stable ID and slug
   const productId = product.id != null ? String(product.id) : 
-                    ('slug' in product && product.slug) ? product.slug :
-                    title.toLowerCase().replace(/\s+/g, '-');
+                    product.slug || title.toLowerCase().replace(/\s+/g, '-');
+  const slug = product.slug || productId;
 
   return {
     id: productId,
-    slug: 'slug' in product && product.slug ? product.slug : productId,
+    slug,
     title,
     description: product.description || '',
     image: imageUrl,
@@ -91,64 +88,10 @@ interface NormalizedProduct {
   packaging: string;
 }
 
-interface DefaultProduct {
-  id: string;
-  title: string;
-  description: string;
-  image: string;
-  varieties: string[];
-  certifications: string[];
-  packaging: string;
-  category: string;
-}
-
-const defaultProducts = [
-  {
-    id: "rice",
-    title: "Premium Rice",
-    description: "High-quality Vietnamese rice varieties including fragrant jasmine and premium long-grain rice, carefully processed to maintain nutritional value and authentic taste.",
-    image: "/images/rice-varieties.jpg",
-    varieties: ["Jasmine Rice", "Long-grain Rice", "Short-grain Rice", "Brown Rice"],
-    certifications: ["Organic Certified", "Fair Trade", "ISO 22000"],
-    packaging: "5kg, 10kg, 25kg, 50kg bags",
-    category: "Grains"
-  },
-  {
-    id: "coffee",
-    title: "Arabica Coffee",
-    description: "Premium Vietnamese coffee beans sourced from highland regions, offering rich aroma and exceptional flavor profile for coffee enthusiasts worldwide.",
-    image: "/images/coffee-beans.jpg",
-    varieties: ["Robusta", "Arabica", "Specialty Blend", "Instant Coffee"],
-    certifications: ["Rainforest Alliance", "UTZ Certified", "Organic"],
-    packaging: "250g, 500g, 1kg bags",
-    category: "Beverages"
-  },
-  {
-    id: "mango",
-    title: "Tropical Mango",
-    description: "Fresh tropical mangoes cultivated in optimal growing conditions, delivering sweet, juicy fruit that meets international quality standards.",
-    image: "/images/tropical-mango.jpg",
-    varieties: ["Kent Mango", "Tommy Atkins", "Haden", "Keitt"],
-    certifications: ["GlobalGAP", "Organic", "HACCP"],
-    packaging: "4kg, 6kg, 10kg cartons",
-    category: "Fruits"
-  },
-  {
-    id: "cassava",
-    title: "Cassava Products",
-    description: "Versatile cassava products including fresh roots, dried chips, and starch, processed using modern techniques to ensure quality and shelf life.",
-    image: "/images/cassava-roots.jpg",
-    varieties: ["Fresh Cassava", "Cassava Chips", "Cassava Starch", "Tapioca"],
-    certifications: ["HACCP", "ISO 22000", "BRC Food"],
-    packaging: "20kg, 25kg, 50kg bags",
-    category: "Roots & Tubers"
-  }
-];
-
 export function Products({ data }: ProductsProps = {}) {
-  // Use fallback if data is undefined, null, or empty array
-  const rawProducts = data && data.length > 0 ? data : defaultProducts;
-  const products = rawProducts.map(p => normalizeProduct(p as Product | DefaultProduct));
+  // Use Strapi fallback data if CMS data is unavailable
+  const rawProducts = data && data.length > 0 ? data : fallbackProducts;
+  const products = rawProducts.map(p => normalizeProduct(p));
   
   return (
     <section className="py-20">

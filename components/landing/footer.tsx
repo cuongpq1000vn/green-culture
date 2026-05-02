@@ -170,27 +170,45 @@ export function Footer({ navigation, siteSettings }: FooterProps = {}) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-4">
-              <Link
-                href="#"
-                className="p-2 rounded-full border border-white/20 hover:border-[#F5A623] hover:text-[#F5A623] transition-colors"
-              >
-                <Linkedin className="h-4 w-4" />
-              </Link>
-              <Link
-                href="#"
-                className="p-2 rounded-full border border-white/20 hover:border-[#F5A623] hover:text-[#F5A623] transition-colors"
-              >
-                <Mail className="h-4 w-4" />
-              </Link>
-              <Link
-                href="#"
-                className="p-2 rounded-full border border-white/20 hover:border-[#F5A623] hover:text-[#F5A623] transition-colors"
-              >
-                <Phone className="h-4 w-4" />
-              </Link>
+              {siteSettings?.socialLinks && siteSettings.socialLinks.length > 0 ? (
+                siteSettings.socialLinks.map((link) => (
+                  <Link
+                    key={link.id}
+                    href={link.href}
+                    className="p-2 rounded-full border border-white/20 hover:border-[#F5A623] hover:text-[#F5A623] transition-colors"
+                    {...(link.openInNewTab && { target: "_blank", rel: "noopener noreferrer" })}
+                  >
+                    {link.icon === 'linkedin' && <Linkedin className="h-4 w-4" />}
+                    {link.icon === 'mail' && <Mail className="h-4 w-4" />}
+                    {link.icon === 'phone' && <Phone className="h-4 w-4" />}
+                    {!link.icon && <span className="h-4 w-4">{link.label}</span>}
+                  </Link>
+                ))
+              ) : (
+                <>
+                  <Link
+                    href="#"
+                    className="p-2 rounded-full border border-white/20 hover:border-[#F5A623] hover:text-[#F5A623] transition-colors"
+                  >
+                    <Linkedin className="h-4 w-4" />
+                  </Link>
+                  <Link
+                    href="#"
+                    className="p-2 rounded-full border border-white/20 hover:border-[#F5A623] hover:text-[#F5A623] transition-colors"
+                  >
+                    <Mail className="h-4 w-4" />
+                  </Link>
+                  <Link
+                    href="#"
+                    className="p-2 rounded-full border border-white/20 hover:border-[#F5A623] hover:text-[#F5A623] transition-colors"
+                  >
+                    <Phone className="h-4 w-4" />
+                  </Link>
+                </>
+              )}
             </div>
             <p className="text-white/40 text-sm">
-              Copyright @ 2025 | EGO Agricultural Export | All Rights Reserved
+              {siteSettings?.copyrightText || "Copyright @ 2025 | EGO Agricultural Export | All Rights Reserved"}
             </p>
           </div>
         </div>

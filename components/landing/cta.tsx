@@ -51,11 +51,11 @@ export function CTA({ data }: CTAProps = {}) {
           <Button
             size="lg"
             className="bg-[#F5A623] hover:bg-[#D4911E] text-foreground font-semibold rounded-full px-10 py-6 text-lg"
-            asChild={data?.primaryButton?.href ? true : undefined}
+            asChild={data?.primaryButton?.url ? true : undefined}
           >
-            {data?.primaryButton?.href ? (
-              <a href={data.primaryButton.href} target={data.primaryButton.openInNewTab ? "_blank" : "_self"} rel={data.primaryButton.openInNewTab ? "noopener noreferrer" : undefined}>
-                {data.primaryButton.label}
+            {data?.primaryButton?.url ? (
+              <a href={data.primaryButton.url} target={data.primaryButton.isExternal ? "_blank" : "_self"} rel={data.primaryButton.isExternal ? "noopener noreferrer" : undefined}>
+                {data.primaryButton.text}
               </a>
             ) : (
               "Contact Us"

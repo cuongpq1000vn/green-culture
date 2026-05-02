@@ -12,8 +12,17 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
+interface SectionHeader {
+  badge?: string;
+  title: string;
+  description?: string;
+  buttonText?: string;
+  buttonHref?: string;
+}
+
 interface FacilitiesProps {
   data?: Facility[];
+  sectionHeader?: SectionHeader;
 }
 
 const defaultFacilities = [
@@ -40,9 +49,17 @@ const defaultFacilities = [
   },
 ];
 
-export function Facilities({ data }: FacilitiesProps = {}) {
+const defaultSectionHeader: SectionHeader = {
+  badge: "Our Processing Facilities",
+  title: "Integrated Facilities for Export-Ready Products",
+  description: "Our modern facilities combine traditional expertise with advanced technology, featuring practical infrastructure designed to support export-ready standards.",
+  buttonText: "Learn More",
+};
+
+export function Facilities({ data, sectionHeader }: FacilitiesProps = {}) {
   // Use fallback if data is undefined, null, or empty array
   const displayFacilities = data && data.length > 0 ? data : defaultFacilities;
+  const header = sectionHeader || defaultSectionHeader;
   return (
     <section id="factory" className="py-20 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -55,18 +72,16 @@ export function Facilities({ data }: FacilitiesProps = {}) {
             transition={{ duration: 0.6 }}
           >
             <span className="inline-block px-4 py-2 rounded-full border border-foreground/20 text-sm text-foreground/70 mb-4">
-              Our Processing Facilities
+              {header.badge}
             </span>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6 text-balance">
-              Integrated Facilities for Export-Ready Products
+              {header.title}
             </h2>
             <p className="text-foreground/70 leading-relaxed mb-8">
-              Our modern facilities combine traditional expertise with advanced
-              technology, featuring practical infrastructure designed to support
-              export-ready standards.
+              {header.description}
             </p>
             <Button className="bg-[#F5A623] hover:bg-[#D4911E] text-foreground font-semibold rounded-full px-8">
-              Learn More
+              {header.buttonText}
             </Button>
           </motion.div>
 

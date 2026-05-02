@@ -10,6 +10,10 @@ import { POPULATE_QUERIES, API_ENDPOINTS, CACHE_TAGS } from '../api-contract';
 import { fallbackProducts, fallbackProductCategories } from '../fallbacks';
 import type { ProductsResponse, ProductCategoriesResponse, ProductResponse, Product, ProductCategory } from '../types';
 
+// Type for products that might come from fallback data
+type ProductOrFallback = Product;
+type ProductCategoryOrFallback = ProductCategory;
+
 /**
  * Get all products with full relations
  */
@@ -20,7 +24,7 @@ export async function getProducts(): Promise<Product[]> {
         API_ENDPOINTS.PRODUCTS,
         {
           populate: POPULATE_QUERIES.getProducts.populate,
-          sort: POPULATE_QUERIES.getProducts.sort,
+          sort: [...POPULATE_QUERIES.getProducts.sort],
           revalidate: 0, // No caching - always fetch fresh data
           next: {
             tags: [CACHE_TAGS.products],
@@ -45,7 +49,7 @@ export async function getFeaturedProducts(): Promise<Product[]> {
         API_ENDPOINTS.FEATURED_PRODUCTS(),
         {
           populate: POPULATE_QUERIES.getProducts.populate,
-          sort: POPULATE_QUERIES.getProducts.sort,
+          sort: [...POPULATE_QUERIES.getProducts.sort],
           revalidate: 0, // No caching - always fetch fresh data
           next: {
             tags: [CACHE_TAGS.products],
@@ -94,7 +98,7 @@ export async function getProductsByCategory(categorySlug: string): Promise<Produ
         API_ENDPOINTS.PRODUCTS_BY_CATEGORY(categorySlug),
         {
           populate: POPULATE_QUERIES.getProducts.populate,
-          sort: POPULATE_QUERIES.getProducts.sort,
+          sort: [...POPULATE_QUERIES.getProducts.sort],
           revalidate: 0, // No caching - always fetch fresh data
           next: {
             tags: [CACHE_TAGS.products],
@@ -119,7 +123,7 @@ export async function getProductCategories(): Promise<ProductCategory[]> {
         API_ENDPOINTS.PRODUCT_CATEGORIES,
         {
           populate: POPULATE_QUERIES.getProductCategories.populate,
-          revalidate: 0, // No caching - always fetch fresh data
+          revalidate: 0,
           next: {
             tags: [CACHE_TAGS.productCategories],
           },

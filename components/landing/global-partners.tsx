@@ -4,8 +4,15 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import type { GlobalPartner } from "@/lib/strapi/types";
 
+interface SectionHeader {
+  badge?: string;
+  title?: string;
+  subtitle?: string;
+}
+
 interface GlobalPartnersProps {
   data?: GlobalPartner[];
+  sectionHeader?: SectionHeader;
 }
 
 const defaultPartners = [
@@ -59,9 +66,15 @@ const defaultPartners = [
   },
 ];
 
-export function GlobalPartners({ data }: GlobalPartnersProps = {}) {
+const defaultSectionHeader: SectionHeader = {
+  title: "Global Reach",
+  subtitle: "Serving 15+ countries worldwide",
+};
+
+export function GlobalPartners({ data, sectionHeader }: GlobalPartnersProps = {}) {
   // Use fallback if data is undefined, null, or empty array
   const displayPartners = data && data.length > 0 ? data : defaultPartners;
+  const header = sectionHeader || defaultSectionHeader;
   return (
     <section className="py-20 bg-background overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -120,7 +133,7 @@ export function GlobalPartners({ data }: GlobalPartnersProps = {}) {
                   transition={{ duration: 0.6, delay: 0.3 }}
                   className="text-3xl md:text-4xl font-bold text-foreground mb-2"
                 >
-                  Global Reach
+                  {header.title}
                 </motion.h3>
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
@@ -129,7 +142,7 @@ export function GlobalPartners({ data }: GlobalPartnersProps = {}) {
                   transition={{ duration: 0.6, delay: 0.4 }}
                   className="text-foreground/60"
                 >
-                  Serving 15+ countries worldwide
+                  {header.subtitle}
                 </motion.p>
               </div>
             </div>

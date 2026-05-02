@@ -61,19 +61,22 @@ export function About({ data, stats }: AboutProps = {}) {
             transition={{ duration: 0.6 }}
           >
             <span className="inline-block px-4 py-2 rounded-full border border-foreground/20 text-sm text-foreground/70 mb-4">
-              {data?.badge || "About Us"}
+              {data?.subtitle || "About Us"}
             </span>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6 text-balance">
-              {data?.title || "Building Sustainable Agricultural Supply Chains"}
+              {data?.title || "About EGO"}
             </h2>
             <div className="text-foreground/70 leading-relaxed mb-6">
-              {data?.description || (
+              {data?.content ? (
+                // Render rich text content from CMS (Strapi sanitizes content)
+                <div 
+                  dangerouslySetInnerHTML={{ __html: data.content }} 
+                  className="prose prose-lg max-w-none [&>p]:mb-4 [&>p:last-child]:mb-0"
+                />
+              ) : (
                 <>
                   <p className="mb-6">
-                    EGO is a leading agricultural export company based in Vietnam,
-                    specializing in high-quality rice processing and export. Our
-                    operations begin with cassava starch and are built around
-                    practical production needs and long-term growth.
+                    With over 15 years of experience, EGO has established itself as a leading agricultural export company.
                   </p>
                   <p>
                     We focus on quality control, sustainable sourcing, and reliable

@@ -670,7 +670,13 @@ async function seedLandingPage(imageMappings: Record<string, ImageMapping>) {
         description: 'Contact us today to discuss your agricultural import needs.',
         backgroundImage: getMediaId(imageMappings, 'cta-bg.jpg')
       },
-      facilitiesSection: { title: 'Our Facilities', subtitle: 'World-Class Infrastructure' },
+      facilitiesSection: { 
+        title: 'Our Facilities', 
+        subtitle: 'Processing Facilities',
+        description: 'Our modern facilities combine traditional expertise with advanced technology, featuring practical infrastructure designed to support export-ready standards.',
+        buttonText: 'Learn More',
+        buttonHref: '/factory'
+      },
       processSection: { title: 'Our Process', subtitle: 'Quality at Every Step' },
       partnersSection: { title: 'Global Partners', subtitle: 'Worldwide Reach' },
       testimonialsSection: { title: 'What Our Partners Say', subtitle: 'Trusted by Industry Leaders' },

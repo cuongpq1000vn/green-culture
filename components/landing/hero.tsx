@@ -48,7 +48,7 @@ export function Hero({ data }: HeroProps = {}) {
           className="inline-block mb-6"
         >
           <span className="px-4 py-2 rounded-full border border-foreground/20 text-sm text-foreground/70 bg-white/50 backdrop-blur-sm">
-            {data?.badge || "Agricultural Supply & Export from Vietnam"}
+            {data?.subtitle || "Agricultural Supply & Export from Vietnam"}
           </span>
         </motion.div>
 
@@ -78,11 +78,11 @@ export function Hero({ data }: HeroProps = {}) {
           <Button
             size="lg"
             className="bg-[#F5A623] hover:bg-[#D4911E] text-foreground font-semibold rounded-full px-8 py-6 text-lg"
-            asChild={data?.ctaButton?.href ? true : undefined}
+            asChild={data?.ctaButton?.url ? true : undefined}
           >
-            {data?.ctaButton?.href ? (
-              <a href={data.ctaButton.href} target={data.ctaButton.openInNewTab ? "_blank" : "_self"} rel={data.ctaButton.openInNewTab ? "noopener noreferrer" : undefined}>
-                {data.ctaButton.label}
+            {data?.ctaButton?.url ? (
+              <a href={data.ctaButton.url} target={data.ctaButton.isExternal ? "_blank" : "_self"} rel={data.ctaButton.isExternal ? "noopener noreferrer" : undefined}>
+                {data.ctaButton.text}
               </a>
             ) : (
               "Learn More"

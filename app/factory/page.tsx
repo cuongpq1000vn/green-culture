@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { PageHero } from "@/components/landing/page-hero";
 import { FacilitiesCMS } from "@/components/cms/facilities-cms";
 import { ProcessCMS } from "@/components/cms/process-cms";
-import { FeaturedImage } from "@/components/landing/featured-image";
+import { FeaturedImageCMS } from "@/components/cms/featured-image-cms";
 import { CTACMS } from "@/components/cms/cta-cms";
 
 export const metadata: Metadata = {
@@ -19,7 +19,7 @@ export default function FactoryPage() {
       />
       <FacilitiesCMS />
       <ProcessCMS />
-      <FeaturedImage />
+      <FeaturedImageCMS />
       <CTACMS />
     </main>
   );

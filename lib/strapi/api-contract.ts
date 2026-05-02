@@ -87,13 +87,18 @@ export const QUERY_SHAPES = {
       hero: {
         populate: {
           backgroundImage: true,
-          ctaButton: true
+          backgroundVideo: true,
+          ctaButton: true,
+          secondaryButton: true
         }
       },
       homeStats: true,
       aboutSection: {
         populate: {
-          image: true
+          image: true,
+          stats: true,
+          features: true,
+          ctaButton: true
         }
       },
       featuredProducts: {
@@ -105,12 +110,14 @@ export const QUERY_SHAPES = {
       ctaSection: {
         populate: {
           backgroundImage: true,
-          primaryButton: true
+          primaryButton: true,
+          secondaryButton: true
         }
       },
       seo: {
         populate: {
-          metaImage: true
+          metaImage: true,
+          metaSocial: true
         }
       }
     },
@@ -210,11 +217,11 @@ export const QUERY_SHAPES = {
     endpoint: API_ENDPOINTS.SITE_SETTINGS,
     populate: {
       logo: true,
-      footerLogo: true,
-      socialLinks: true,
+      favicon: true,
       defaultSeo: {
         populate: {
-          metaImage: true
+          metaImage: true,
+          metaSocial: true
         }
       }
     },
@@ -224,16 +231,7 @@ export const QUERY_SHAPES = {
   // Navigation
   getNavigation: {
     endpoint: API_ENDPOINTS.NAVIGATION,
-    populate: {
-      mainNav: {
-        populate: {
-          children: true
-        }
-      },
-      footerCompanyLinks: true,
-      footerProductLinks: true,
-      footerContactLinks: true
-    },
+    populate: '*', // Use wildcard populate instead of specific fields
     returnType: 'Navigation' as const
   }
 } as const

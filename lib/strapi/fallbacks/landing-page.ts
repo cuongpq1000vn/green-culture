@@ -10,9 +10,9 @@ import type { LandingPage, HeroSection, CTASection, Stat } from '../types';
 // Hero Section Data
 export const fallbackHeroSection: HeroSection = {
   id: 1,
-  badge: 'Agricultural Supply & Export from Vietnam',
   title: 'Supplying High-Quality Agricultural\nProducts to Global Markets',
-  subtitle: 'EGO processes and exports rice, expanding into coffee and mango with controlled quality systems and reliable international logistics.',
+  subtitle: 'Agricultural Supply & Export from Vietnam',
+  description: 'EGO processes and exports rice, expanding into coffee and mango with controlled quality systems and reliable international logistics.',
   backgroundImage: {
     id: 20,
     url: '/images/hero-bg.jpg',
@@ -24,10 +24,11 @@ export const fallbackHeroSection: HeroSection = {
   },
   ctaButton: {
     id: 1,
-    label: 'Learn More',
-    href: '/about',
+    text: 'Learn More',
+    url: '/about',
     variant: 'primary',
-    openInNewTab: false,
+    isExternal: false,
+    size: 'md',
   },
 };
 
@@ -105,22 +106,22 @@ export const fallbackCTASection: CTASection = {
     height: 600,
     formats: {},
   },
-  ctaButton: {
+  primaryButton: {
     id: 2,
-    label: 'Contact Us Today',
-    href: '/contact',
+    text: 'Contact Us Today',
+    url: '/contact',
     variant: 'primary',
-    openInNewTab: false,
+    isExternal: false,
+    size: 'md',
   },
 };
 
 // About Section Data (for landing page)
 export const fallbackAboutSection = {
   id: 1,
-  badge: 'About EGO',
+  subtitle: 'About EGO',
   title: 'Trusted Agricultural Partner Since 1999',
-  description: 'EGO has been a leading agricultural export company from Vietnam, specializing in premium rice, coffee, mango, and cassava products. Our commitment to quality and sustainable farming practices has made us a trusted partner for businesses worldwide.',
-  content: 'With over 25 years of experience in agricultural processing and export, we have built strong relationships with farmers across Vietnam and customers around the globe. Our state-of-the-art facilities and rigorous quality control processes ensure that every product meets international standards.',
+  content: 'EGO has been a leading agricultural export company from Vietnam, specializing in premium rice, coffee, mango, and cassava products. Our commitment to quality and sustainable farming practices has made us a trusted partner for businesses worldwide.<br><br>With over 25 years of experience in agricultural processing and export, we have built strong relationships with farmers across Vietnam and customers around the globe. Our state-of-the-art facilities and rigorous quality control processes ensure that every product meets international standards.',
   image: {
     id: 22,
     url: '/images/about-rice-field.jpg',
@@ -150,9 +151,16 @@ export const fallbackAboutSection = {
 // Complete Landing Page Data
 export const fallbackLandingPage: Omit<LandingPage, 'createdAt' | 'updatedAt' | 'publishedAt'> = {
   id: 1,
-  heroSection: fallbackHeroSection,
-  statsBar: fallbackStats.filter(stat => stat.section === 'home'),
+  hero: fallbackHeroSection,
+  homeStats: fallbackStats.filter(stat => stat.section === 'home'),
   featuredProducts: undefined, // Will be populated from products.ts
+  facilitiesSection: {
+    title: 'Our Facilities',
+    subtitle: 'Processing Facilities',
+    description: 'Our modern facilities combine traditional expertise with advanced technology, featuring practical infrastructure designed to support export-ready standards.',
+    buttonText: 'Learn More',
+    buttonHref: '/factory',
+  },
   ctaSection: fallbackCTASection,
   seo: {
     id: 1,

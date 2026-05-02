@@ -39,10 +39,11 @@ export interface StrapiResponse<T> {
 // Shared Components
 export interface CtaButton {
   id: number
-  label: string
-  href: string
-  variant: 'primary' | 'secondary' | 'outline'
-  openInNewTab: boolean
+  text: string
+  url?: string
+  isExternal: boolean
+  variant: 'primary' | 'secondary' | 'outline' | 'ghost'
+  size: 'sm' | 'md' | 'lg'
 }
 
 export interface Link {
@@ -64,20 +65,26 @@ export interface SeoComponent {
   id: number
   metaTitle?: string
   metaDescription?: string
-  keywords?: string
   metaImage?: StrapiMedia
-  canonicalUrl?: string
+  metaSocial?: Array<{
+    id: number
+    socialNetwork: string
+    title: string
+    description: string
+    image?: StrapiMedia
+  }>
 }
 
 // Section Components
 export interface HeroSection {
   id: number
-  badge?: string
   title: string
   subtitle?: string
   description?: string
   backgroundImage?: StrapiMedia
+  backgroundVideo?: StrapiMedia
   ctaButton?: CtaButton
+  secondaryButton?: CtaButton
   alignment?: 'left' | 'center' | 'right'
   overlay?: boolean
   overlayOpacity?: number
@@ -102,9 +109,9 @@ export type CtaSection = CTASection
 
 export interface AboutSection {
   id: number
-  badge?: string
   title: string
-  description: string
+  subtitle?: string
+  content: string
   image?: StrapiMedia
 }
 
@@ -241,7 +248,13 @@ export interface LandingPage {
   homeStats?: Stat[]
   aboutSection?: AboutSection
   featuredProducts?: Product[]
-  facilitiesSection?: { title: string; subtitle?: string }
+  facilitiesSection?: { 
+    title: string; 
+    subtitle?: string;
+    description?: string;
+    buttonText?: string;
+    buttonHref?: string;
+  }
   processSection?: { title: string; subtitle?: string }
   partnersSection?: { title: string; subtitle?: string }
   testimonialsSection?: { title: string; subtitle?: string }
@@ -251,21 +264,25 @@ export interface LandingPage {
   createdAt: string
   updatedAt: string
   publishedAt: string
-  // Alias for backwards compatibility with components
-  heroSection?: HeroSection
 }
 
 export interface SiteSettings {
   id: number
   siteName: string
+  siteDescription?: string
   logo: StrapiMedia
-  footerLogo?: StrapiMedia
-  companyDescription?: string
+  logoAlt?: string
+  favicon?: StrapiMedia
+  companyInfo?: any  // JSON field
+  contactInfo?: any  // JSON field
+  socialLinks?: any  // JSON field
+  footerText?: string  // Rich text
   copyrightText?: string
-  contactEmail?: string
-  contactPhone?: string
-  socialLinks?: Link[]
   defaultSeo?: SeoComponent
+  gtmId?: string
+  gaId?: string
+  primaryColor?: string
+  secondaryColor?: string
   createdAt: string
   updatedAt: string
   publishedAt: string
