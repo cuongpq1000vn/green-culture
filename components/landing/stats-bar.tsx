@@ -3,8 +3,13 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
+import type { Stat } from "@/lib/strapi/types";
 
-const stats = [
+interface StatsBarProps {
+  data?: Stat[];
+}
+
+const defaultStats = [
   {
     value: "25+",
     label: "Years Experience"
@@ -23,9 +28,19 @@ const stats = [
   }
 ];
 
-export function StatsBar() {
+export function StatsBar({ data }: StatsBarProps = {}) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
+  // Use fallback if data is undefined, null, or empty array
+  const stats = data && data.length > 0 ? data : defaultStats;
+
+  // Helper to format stat value with prefix/suffix
+  const formatValue = (stat: any) => {
+    if ('prefix' in stat || 'suffix' in stat) {
+      return `${stat.prefix || ''}${stat.value}${stat.suffix || ''}`;
+    }
+    return stat.value;
+  };
 
   return (
     <section className="py-16 bg-gradient-to-r from-background to-[#FFF8E7]">
@@ -41,7 +56,7 @@ export function StatsBar() {
             >
               <div className="bg-[#FFF5E0]/50 rounded-2xl p-6">
                 <span className="block text-3xl md:text-4xl font-bold text-[#C4880A] mb-2">
-                  {stat.value}
+                  {formatValue(stat)}
                 </span>
                 <span className="text-muted-foreground text-sm font-medium">
                   {stat.label}

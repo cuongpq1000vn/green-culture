@@ -1,9 +1,9 @@
 import { Metadata } from "next";
 import { PageHero } from "@/components/landing/page-hero";
-import { Facilities } from "@/components/landing/facilities";
-import { Process } from "@/components/landing/process";
-import { FeaturedImage } from "@/components/landing/featured-image";
-import { CTA } from "@/components/landing/cta";
+import { FacilitiesCMS } from "@/components/cms/facilities-cms";
+import { ProcessCMS } from "@/components/cms/process-cms";
+import { FeaturedImageCMS } from "@/components/cms/featured-image-cms";
+import { CTACMS } from "@/components/cms/cta-cms";
 
 export const metadata: Metadata = {
   title: "Our Factory",
@@ -17,10 +17,10 @@ export default function FactoryPage() {
         title="Our Factory"
         breadcrumbs={[{ label: "Our Factory", href: "/factory" }]}
       />
-      <Facilities />
-      <Process />
-      <FeaturedImage />
-      <CTA />
+      <FacilitiesCMS />
+      <ProcessCMS />
+      <FeaturedImageCMS />
+      <CTACMS />
     </main>
   );
 }

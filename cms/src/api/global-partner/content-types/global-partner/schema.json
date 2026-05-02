@@ -1,0 +1,85 @@
+{
+  "kind": "collectionType",
+  "collectionName": "global_partners",
+  "info": {
+    "singularName": "global-partner",
+    "pluralName": "global-partners",
+    "displayName": "Global Partner",
+    "description": "International partners and markets"
+  },
+  "options": {
+    "draftAndPublish": true,
+    "comment": ""
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "country": {
+      "type": "string",
+      "required": true
+    },
+    "countryCode": {
+      "type": "string",
+      "required": false,
+      "maxLength": 3
+    },
+    "flagEmoji": {
+      "type": "string",
+      "required": false,
+      "maxLength": 10
+    },
+    "partnerCount": {
+      "type": "integer",
+      "required": false,
+      "default": 0
+    },
+    "yearsCooperation": {
+      "type": "string",
+      "required": false
+    },
+    "region": {
+      "type": "string",
+      "required": false
+    },
+    "description": {
+      "type": "text",
+      "required": false
+    },
+    "flag": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "mapImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "partnerSince": {
+      "type": "date",
+      "required": false
+    },
+    "activeProducts": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::product.product"
+    },
+    "exportVolume": {
+      "type": "string",
+      "required": false
+    },
+    "primaryContact": {
+      "type": "string",
+      "required": false
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}

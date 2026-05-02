@@ -7,51 +7,92 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, CheckCircle } from "lucide-react";
 import Link from "next/link";
+import { getStrapiImageUrl } from "@/lib/strapi/utils/media";
+import { fallbackProducts } from "@/lib/strapi/fallbacks";
+import type { Product } from "@/lib/strapi/types";
 
-const products = [
-  {
-    id: "rice",
-    title: "Premium Rice",
-    description: "High-quality Vietnamese rice varieties including fragrant jasmine and premium long-grain rice, carefully processed to maintain nutritional value and authentic taste.",
-    image: "/images/rice-varieties.jpg",
-    varieties: ["Jasmine Rice", "Long-grain Rice", "Short-grain Rice", "Brown Rice"],
-    certifications: ["Organic Certified", "Fair Trade", "ISO 22000"],
-    packaging: "5kg, 10kg, 25kg, 50kg bags",
-    category: "Grains"
-  },
-  {
-    id: "coffee",
-    title: "Arabica Coffee",
-    description: "Premium Vietnamese coffee beans sourced from highland regions, offering rich aroma and exceptional flavor profile for coffee enthusiasts worldwide.",
-    image: "/images/coffee-beans.jpg",
-    varieties: ["Robusta", "Arabica", "Specialty Blend", "Instant Coffee"],
-    certifications: ["Rainforest Alliance", "UTZ Certified", "Organic"],
-    packaging: "250g, 500g, 1kg bags",
-    category: "Beverages"
-  },
-  {
-    id: "mango",
-    title: "Tropical Mango",
-    description: "Fresh tropical mangoes cultivated in optimal growing conditions, delivering sweet, juicy fruit that meets international quality standards.",
-    image: "/images/tropical-mango.jpg",
-    varieties: ["Kent Mango", "Tommy Atkins", "Haden", "Keitt"],
-    certifications: ["GlobalGAP", "Organic", "HACCP"],
-    packaging: "4kg, 6kg, 10kg cartons",
-    category: "Fruits"
-  },
-  {
-    id: "cassava",
-    title: "Cassava Products",
-    description: "Versatile cassava products including fresh roots, dried chips, and starch, processed using modern techniques to ensure quality and shelf life.",
-    image: "/images/cassava-roots.jpg",
-    varieties: ["Fresh Cassava", "Cassava Chips", "Cassava Starch", "Tapioca"],
-    certifications: ["HACCP", "ISO 22000", "BRC Food"],
-    packaging: "20kg, 25kg, 50kg bags",
-    category: "Roots & Tubers"
+interface ProductsProps {
+  data?: Product[];
+}
+
+// Helper to normalize product data from CMS or fallback
+function normalizeProduct(product: Product): NormalizedProduct {
+  // Get the display name - prefer title, fallback to name
+  const title = product.title || product.name || 'Product';
+  
+  // Handle category - it should always be a ProductCategory object
+  const categoryName = product.category?.name || 'General';
+  
+  // Handle image URL
+  let imageUrl: string;
+  if (product.image?.url) {
+    const strapiUrl = getStrapiImageUrl(product.image);
+    imageUrl = strapiUrl || '/images/rice-varieties.jpg';
+  } else {
+    // Use a default image based on product slug/name/title
+    const productIdentifier = product.slug || product.name || product.title || '';
+    if (productIdentifier.toLowerCase().includes('rice')) {
+      imageUrl = '/images/rice-varieties.jpg';
+    } else if (productIdentifier.toLowerCase().includes('coffee')) {
+      imageUrl = '/images/coffee-beans.jpg';
+    } else if (productIdentifier.toLowerCase().includes('mango')) {
+      imageUrl = '/images/tropical-mango.jpg';
+    } else if (productIdentifier.toLowerCase().includes('cassava')) {
+      imageUrl = '/images/cassava-roots.jpg';
+    } else {
+      imageUrl = '/images/rice-varieties.jpg';
+    }
   }
-];
+  
+  const imageAlt = product.image?.alternativeText || title;
 
-export function Products() {
+  // Handle varieties - normalize to string array
+  const varieties = (product.varieties || []).map((variety: string | { name: string }) =>
+    typeof variety === 'string' ? variety : variety?.name || ''
+  ).filter(Boolean);
+
+  // Handle certifications - normalize to string array  
+  const certifications = (product.certifications || []).map((cert: string | { name: string }) => 
+    typeof cert === 'string' ? cert : cert?.name || ''
+  ).filter(Boolean);
+
+  // Generate stable ID and slug
+  const productId = product.id != null ? String(product.id) : 
+                    product.slug || title.toLowerCase().replace(/\s+/g, '-');
+  const slug = product.slug || productId;
+
+  return {
+    id: productId,
+    slug,
+    title,
+    description: product.description || '',
+    image: imageUrl,
+    imageAlt,
+    category: categoryName,
+    varieties,
+    certifications,
+    packaging: product.packaging || '',
+  };
+}
+
+interface NormalizedProduct {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  image: string;
+  imageAlt: string;
+  category: string;
+  varieties: string[];
+  certifications: string[];
+  packaging: string;
+}
+
+export function Products({ data }: ProductsProps = {}) {
+  // Use Strapi fallback data if CMS data is unavailable
+  const rawProducts = data && data.length > 0 ? data : fallbackProducts;
+  const products = rawProducts.map(p => normalizeProduct(p));
+  
   return (
     <section className="py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -67,7 +108,7 @@ export function Products() {
             Our Premium Products
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Discover our range of high-quality agricultural products, sourced from Vietnam's finest farms 
+            Discover our range of high-quality agricultural products, sourced from Vietnam&apos;s finest farms 
             and processed to meet international standards.
           </p>
         </motion.div>
@@ -76,7 +117,7 @@ export function Products() {
         <div className="grid lg:grid-cols-2 gap-8 mb-16">
           {products.map((product, index) => (
             <motion.div
-              key={product.id}
+              key={product.id || `product-${index}`}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -84,12 +125,14 @@ export function Products() {
             >
               <Card className="overflow-hidden group hover:shadow-xl transition-all duration-300 h-full">
                 <div className="aspect-[16/10] relative overflow-hidden">
-                  <Image
-                    src={product.image}
-                    alt={product.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
+                  {product.image && (
+                    <Image
+                      src={product.image}
+                      alt={product.imageAlt}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  )}
                   <div className="absolute top-4 left-4">
                     <Badge variant="secondary" className="bg-[#F5A623] text-foreground">
                       {product.category}
@@ -107,11 +150,12 @@ export function Products() {
                   </p>
 
                   {/* Varieties */}
+                  {product.varieties.length > 0 && (
                   <div className="mb-4">
                     <h4 className="text-sm font-semibold text-foreground mb-2">Varieties</h4>
                     <div className="flex flex-wrap gap-2">
-                      {product.varieties.slice(0, 3).map((variety) => (
-                        <Badge key={variety} variant="outline" className="text-xs">
+                      {product.varieties.slice(0, 3).map((variety, vIndex) => (
+                        <Badge key={variety || `variety-${vIndex}`} variant="outline" className="text-xs">
                           {variety}
                         </Badge>
                       ))}
@@ -122,32 +166,37 @@ export function Products() {
                       )}
                     </div>
                   </div>
+                  )}
 
                   {/* Certifications */}
+                  {product.certifications.length > 0 && (
                   <div className="mb-4">
                     <h4 className="text-sm font-semibold text-foreground mb-2">Certifications</h4>
                     <div className="flex items-start gap-2">
-                      {product.certifications.slice(0, 2).map((cert) => (
-                        <div key={cert} className="flex items-center gap-1">
+                      {product.certifications.slice(0, 2).map((cert, cIndex) => (
+                        <div key={cert || `cert-${cIndex}`} className="flex items-center gap-1">
                           <CheckCircle className="h-3 w-3 text-[#C4880A]" />
                           <span className="text-xs text-muted-foreground">{cert}</span>
                         </div>
                       ))}
                     </div>
                   </div>
+                  )}
 
                   {/* Packaging */}
+                  {product.packaging && (
                   <div className="mb-6">
                     <h4 className="text-sm font-semibold text-foreground mb-1">Packaging</h4>
                     <p className="text-xs text-muted-foreground">{product.packaging}</p>
                   </div>
+                  )}
 
                   {/* CTA Button */}
                   <Button 
                     asChild
                     className="w-full bg-[#F5A623] hover:bg-[#D4911E] text-foreground font-semibold"
                   >
-                    <Link href={`/products#${product.id}`} className="inline-flex items-center justify-center gap-2">
+                    <Link href={`/products#${product.slug || product.id}`} className="inline-flex items-center justify-center gap-2">
                       Learn More
                       <ArrowRight className="h-4 w-4" />
                     </Link>

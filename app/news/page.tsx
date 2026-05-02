@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { PageHero } from "@/components/landing/page-hero";
-import { Blog } from "@/components/landing/blog";
-import { CTA } from "@/components/landing/cta";
+import { BlogCMS } from "@/components/cms/blog-cms";
+import { CTACMS } from "@/components/cms/cta-cms";
 
 export const metadata: Metadata = {
   title: "News & Updates",
@@ -15,8 +15,8 @@ export default function NewsPage() {
         title="News & Updates"
         breadcrumbs={[{ label: "News & Updates", href: "/news" }]}
       />
-      <Blog />
-      <CTA />
+      <BlogCMS />
+      <CTACMS />
     </main>
   );
 }

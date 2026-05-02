@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
-import { Header } from '@/components/landing/header'
-import { Footer } from '@/components/landing/footer'
+import { HeaderCMS } from '@/components/cms/header-cms'
+import { FooterCMS } from '@/components/cms/footer-cms'
 import './globals.css'
 
 const inter = Inter({ 
@@ -45,9 +45,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`${inter.variable} font-sans antialiased bg-background`}>
-        <Header />
+        <HeaderCMS />
         {children}
-        <Footer />
+        <FooterCMS />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

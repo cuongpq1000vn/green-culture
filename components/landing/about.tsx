@@ -3,17 +3,25 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import Image from "next/image";
+import { getStrapiImageProps } from "@/lib/strapi/utils/media";
+import type { AboutSection, Stat } from "@/lib/strapi/types";
 
-const stats = [
+interface AboutProps {
+  data?: AboutSection;
+  stats?: Stat[];
+}
+
+const defaultStats = [
   { value: "10+", label: "Years of Experience" },
   { value: "50+", label: "Global Partners" },
   { value: "100K+", label: "Tons Exported Annually" },
   { value: "15+", label: "Countries Served" },
 ];
 
-export function About() {
+export function About({ data, stats }: AboutProps = {}) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const displayStats = stats || defaultStats;
 
   return (
     <section id="about" className="py-20 bg-gradient-to-b from-background to-[#FFF8E7]">
@@ -23,7 +31,7 @@ export function About() {
           ref={ref}
           className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20"
         >
-          {stats.map((stat, index) => (
+          {displayStats.map((stat, index) => (
             <motion.div
               key={stat.label}
               initial={{ opacity: 0, y: 30 }}
@@ -53,22 +61,31 @@ export function About() {
             transition={{ duration: 0.6 }}
           >
             <span className="inline-block px-4 py-2 rounded-full border border-foreground/20 text-sm text-foreground/70 mb-4">
-              About Us
+              {data?.subtitle || "About Us"}
             </span>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6 text-balance">
-              Building Sustainable Agricultural Supply Chains
+              {data?.title || "About EGO"}
             </h2>
-            <p className="text-foreground/70 leading-relaxed mb-6">
-              EGO is a leading agricultural export company based in Vietnam,
-              specializing in high-quality rice processing and export. Our
-              operations begin with cassava starch and are built around
-              practical production needs and long-term growth.
-            </p>
-            <p className="text-foreground/70 leading-relaxed">
-              We focus on quality control, sustainable sourcing, and reliable
-              international logistics to ensure our partners receive the best
-              agricultural products for their markets.
-            </p>
+            <div className="text-foreground/70 leading-relaxed mb-6">
+              {data?.content ? (
+                // Render rich text content from CMS (Strapi sanitizes content)
+                <div 
+                  dangerouslySetInnerHTML={{ __html: data.content }} 
+                  className="prose prose-lg max-w-none [&>p]:mb-4 [&>p:last-child]:mb-0"
+                />
+              ) : (
+                <>
+                  <p className="mb-6">
+                    With over 15 years of experience, EGO has established itself as a leading agricultural export company.
+                  </p>
+                  <p>
+                    We focus on quality control, sustainable sourcing, and reliable
+                    international logistics to ensure our partners receive the best
+                    agricultural products for their markets.
+                  </p>
+                </>
+              )}
+            </div>
           </motion.div>
 
           <motion.div
@@ -78,12 +95,23 @@ export function About() {
             transition={{ duration: 0.6 }}
             className="relative h-80 lg:h-[450px] rounded-2xl overflow-hidden"
           >
-            <Image
-              src="/images/about-rice-field.jpg"
-              alt="Agricultural fields"
-              fill
-              className="object-cover"
-            />
+            {data?.image ? (
+              <Image
+                {...getStrapiImageProps(data.image, {
+                  quality: 85,
+                  fill: true,
+                })}
+                alt={data.image.alternativeText || "About EGO"}
+                className="object-cover"
+              />
+            ) : (
+              <Image
+                src="/images/about-rice-field.jpg"
+                alt="Agricultural fields"
+                fill
+                className="object-cover"
+              />
+            )}
           </motion.div>
         </div>
       </div>

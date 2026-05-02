@@ -2,36 +2,47 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
+import type { ProcessStep } from "@/lib/strapi/types";
 
-const processSteps = [
+interface ProcessProps {
+  data?: ProcessStep[];
+}
+
+const defaultProcessSteps = [
   {
-    number: "01",
+    id: 1,
+    stepNumber: "01",
     title: "Paddy Inspection & Cleaning",
-    description:
-      "Raw paddy is carefully inspected for moisture content, grain integrity, and foreign materials. It is then cleaned using modern equipment to remove dust, husks, stones, and impurities before entering the milling stage.",
+    description: "Raw paddy is carefully inspected for moisture content, grain integrity, and foreign materials. It is then cleaned using modern equipment to remove dust, husks, stones, and impurities before entering the milling stage.",
+    order: 1,
   },
   {
-    number: "02",
+    id: 2,
+    stepNumber: "02",
     title: "Milling & Polishing",
-    description:
-      "The cleaned paddy undergoes de-husking and whitening processes. Multiple polishing stages ensure consistent grain appearance and remove bran layers to meet export specifications.",
+    description: "The cleaned paddy undergoes de-husking and whitening processes. Multiple polishing stages ensure consistent grain appearance and remove bran layers to meet export specifications.",
+    order: 2,
   },
   {
-    number: "03",
+    id: 3,
+    stepNumber: "03",
     title: "Grading & Sorting",
-    description:
-      "Advanced color sorters and grading machines separate rice by size, color, and quality. This ensures only premium grains meeting international standards proceed to packaging.",
+    description: "Advanced color sorters and grading machines separate rice by size, color, and quality. This ensures only premium grains meeting international standards proceed to packaging.",
+    order: 3,
   },
   {
-    number: "04",
+    id: 4,
+    stepNumber: "04",
     title: "Packaging & Export",
-    description:
-      "Final products are packaged in food-grade materials with proper labeling for traceability. Containers are loaded following international shipping protocols for global delivery.",
+    description: "Final products are packaged in food-grade materials with proper labeling for traceability. Containers are loaded following international shipping protocols for global delivery.",
+    order: 4,
   },
 ];
 
-export function Process() {
+export function Process({ data }: ProcessProps = {}) {
   const [activeStep, setActiveStep] = useState(0);
+  // Use fallback if data is undefined, null, or empty array
+  const displaySteps = data && data.length > 0 ? data : defaultProcessSteps;
 
   return (
     <section className="relative py-20 overflow-hidden">
@@ -69,9 +80,9 @@ export function Process() {
 
           {/* Right Side - Steps */}
           <div className="space-y-4">
-            {processSteps.map((step, index) => (
+            {displaySteps.map((step, index) => (
               <motion.div
-                key={step.number}
+                key={step.id || step.stepNumber}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
@@ -91,7 +102,7 @@ export function Process() {
                         : "bg-white/20 text-white"
                     }`}
                   >
-                    {step.number}
+                    {step.stepNumber}
                   </span>
                   <div>
                     <h3

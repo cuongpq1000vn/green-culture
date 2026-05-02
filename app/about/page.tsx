@@ -1,15 +1,20 @@
 import { Metadata } from "next";
 import { PageHero } from "@/components/landing/page-hero";
-import { About } from "@/components/landing/about";
-import { FeaturedImage } from "@/components/landing/featured-image";
-import { GlobalPartners } from "@/components/landing/global-partners";
-import { Testimonials } from "@/components/landing/testimonials";
-import { CTA } from "@/components/landing/cta";
+import { AboutCMS } from "@/components/cms/about-cms";
+import { FeaturedImageCMS } from "@/components/cms/featured-image-cms";
+import { GlobalPartnersCMS } from "@/components/cms/global-partners-cms";
+import { TestimonialsCMS } from "@/components/cms/testimonials-cms";
+import { CTACMS } from "@/components/cms/cta-cms";
+import { getSiteSettings } from "@/lib/strapi/queries/settings";
 
-export const metadata: Metadata = {
-  title: "About Us",
-  description: "Learn about EGO Agricultural Export - your trusted partner in Vietnamese agricultural products. 25+ years of experience in exporting premium rice, coffee, mango, and cassava worldwide.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const siteSettings = await getSiteSettings();
+  
+  return {
+    title: "About Us",
+    description: siteSettings?.companyDescription || "Learn about EGO Agricultural Export - your trusted partner in Vietnamese agricultural products. 25+ years of experience in exporting premium rice, coffee, mango, and cassava worldwide.",
+  };
+}
 
 export default function AboutPage() {
   return (
@@ -18,11 +23,11 @@ export default function AboutPage() {
         title="About Us"
         breadcrumbs={[{ label: "About Us", href: "/about" }]}
       />
-      <About />
-      <FeaturedImage />
-      <GlobalPartners />
-      <Testimonials />
-      <CTA />
+      <AboutCMS />
+      <FeaturedImageCMS />
+      <GlobalPartnersCMS />
+      <TestimonialsCMS />
+      <CTACMS />
     </main>
   );
 }

@@ -2,56 +2,88 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import type { GlobalPartner } from "@/lib/strapi/types";
 
-const partners = [
+interface SectionHeader {
+  badge?: string;
+  title?: string;
+  subtitle?: string;
+}
+
+interface GlobalPartnersProps {
+  data?: GlobalPartner[];
+  sectionHeader?: SectionHeader;
+}
+
+const defaultPartners = [
   {
+    id: 1,
     country: "United Arab Emirates",
-    flag: "🇦🇪",
-    partners: 12,
-    years: "6+",
+    flagEmoji: "🇦🇪",
+    partnerCount: 12,
+    yearsCooperation: "6+",
+    order: 1,
   },
   {
+    id: 2,
     country: "Philippines",
-    flag: "🇵🇭",
-    partners: 7,
-    years: "4+",
+    flagEmoji: "🇵🇭",
+    partnerCount: 7,
+    yearsCooperation: "4+",
+    order: 2,
   },
   {
+    id: 3,
     country: "China",
-    flag: "🇨🇳",
-    partners: 15,
-    years: "8+",
+    flagEmoji: "🇨🇳",
+    partnerCount: 15,
+    yearsCooperation: "8+",
+    order: 3,
   },
   {
+    id: 4,
     country: "Malaysia",
-    flag: "🇲🇾",
-    partners: 9,
-    years: "5+",
+    flagEmoji: "🇲🇾",
+    partnerCount: 9,
+    yearsCooperation: "5+",
+    order: 4,
   },
   {
+    id: 5,
     country: "Indonesia",
-    flag: "🇮🇩",
-    partners: 11,
-    years: "7+",
+    flagEmoji: "🇮🇩",
+    partnerCount: 11,
+    yearsCooperation: "7+",
+    order: 5,
   },
   {
+    id: 6,
     country: "Singapore",
-    flag: "🇸🇬",
-    partners: 6,
-    years: "3+",
+    flagEmoji: "🇸🇬",
+    partnerCount: 6,
+    yearsCooperation: "3+",
+    order: 6,
   },
 ];
 
-export function GlobalPartners() {
+const defaultSectionHeader: SectionHeader = {
+  title: "Global Reach",
+  subtitle: "Serving 15+ countries worldwide",
+};
+
+export function GlobalPartners({ data, sectionHeader }: GlobalPartnersProps = {}) {
+  // Use fallback if data is undefined, null, or empty array
+  const displayPartners = data && data.length > 0 ? data : defaultPartners;
+  const header = sectionHeader || defaultSectionHeader;
   return (
     <section className="py-20 bg-background overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Partner Cards */}
           <div className="grid grid-cols-2 gap-4">
-            {partners.map((partner, index) => (
+            {displayPartners.map((partner, index) => (
               <motion.div
-                key={partner.country}
+                key={partner.id || partner.country}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
@@ -60,14 +92,20 @@ export function GlobalPartners() {
                 className="bg-white rounded-2xl p-5 border border-border shadow-sm hover:shadow-md transition-shadow"
               >
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="text-2xl">{partner.flag}</span>
+                  {partner.flagEmoji && (
+                    <span className="text-2xl">{partner.flagEmoji}</span>
+                  )}
                   <h3 className="font-semibold text-foreground text-sm">
                     {partner.country}
                   </h3>
                 </div>
-                <p className="text-xs text-foreground/60">
-                  {partner.partners} partners · {partner.years} years of cooperation
-                </p>
+                {(partner.partnerCount || partner.yearsCooperation) && (
+                  <p className="text-xs text-foreground/60">
+                    {partner.partnerCount ? `${partner.partnerCount} partners` : ''}
+                    {partner.partnerCount && partner.yearsCooperation ? ' · ' : ''}
+                    {partner.yearsCooperation ? `${partner.yearsCooperation} years of cooperation` : ''}
+                  </p>
+                )}
               </motion.div>
             ))}
           </div>
@@ -95,7 +133,7 @@ export function GlobalPartners() {
                   transition={{ duration: 0.6, delay: 0.3 }}
                   className="text-3xl md:text-4xl font-bold text-foreground mb-2"
                 >
-                  Global Reach
+                  {header.title}
                 </motion.h3>
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
@@ -104,7 +142,7 @@ export function GlobalPartners() {
                   transition={{ duration: 0.6, delay: 0.4 }}
                   className="text-foreground/60"
                 >
-                  Serving 15+ countries worldwide
+                  {header.subtitle}
                 </motion.p>
               </div>
             </div>

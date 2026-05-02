@@ -1,0 +1,47 @@
+export default {
+  collectionName: 'components_shared_seos',
+  info: {
+    displayName: 'SEO',
+    icon: 'search',
+    description: 'Search Engine Optimization component',
+  },
+  options: {},
+  attributes: {
+    metaTitle: {
+      type: 'string',
+      required: true,
+      maxLength: 60,
+    },
+    metaDescription: {
+      type: 'text',
+      required: true,
+      maxLength: 160,
+    },
+    metaImage: {
+      type: 'media',
+      multiple: false,
+      required: false,
+      allowedTypes: ['images'],
+    },
+    metaSocial: {
+      type: 'component',
+      repeatable: true,
+      component: 'shared.meta-social',
+    },
+    keywords: {
+      type: 'text',
+    },
+    metaRobots: {
+      type: 'string',
+    },
+    structuredData: {
+      type: 'json',
+    },
+    metaViewport: {
+      type: 'string',
+    },
+    canonicalURL: {
+      type: 'string',
+    },
+  },
+};

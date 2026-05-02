@@ -1,0 +1,88 @@
+{
+  "kind": "collectionType",
+  "collectionName": "facilities",
+  "info": {
+    "singularName": "facility",
+    "pluralName": "facilities",
+    "displayName": "Facility",
+    "description": "Production and processing facilities"
+  },
+  "options": {
+    "draftAndPublish": true,
+    "comment": ""
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": ["warehouse", "processing", "packaging", "logistics", "office"],
+      "required": true
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": ["images"]
+    },
+    "gallery": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "capacity": {
+      "type": "string",
+      "required": false
+    },
+    "established": {
+      "type": "date",
+      "required": false
+    },
+    "location": {
+      "type": "string",
+      "required": false
+    },
+    "coordinates": {
+      "type": "json",
+      "required": false
+    },
+    "certifications": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::certification.certification"
+    },
+    "equipment": {
+      "type": "json",
+      "required": false
+    },
+    "operatingHours": {
+      "type": "string",
+      "required": false
+    },
+    "contact": {
+      "type": "json",
+      "required": false
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}
