@@ -1,0 +1,40 @@
+# Dependencies
+node_modules
+
+# Build output (rebuilt in container)
+dist
+.cache
+build
+
+# Development files
+.tmp
+.env
+.env.local
+.env.*.local
+*.log
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Documentation (not needed at runtime)
+*.md
+docs/
+
+# Test files
+*.test.ts
+*.spec.ts
+__tests__
+
+# TypeScript source maps
+*.map
